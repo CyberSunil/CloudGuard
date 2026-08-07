@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Cloud.png" alt="CloudGuard logo" width="200"/>
+<img src="Cloud.png" alt="CloudGuard logo" width="160"/>
 
 # CloudGuard
 
@@ -18,7 +18,9 @@
 ![GCP](https://img.shields.io/badge/GCP-68%20checks-4285F4)
 ![OCI](https://img.shields.io/badge/OCI-43%20checks-red)
 ![Demo](https://img.shields.io/badge/demo-no%20credentials-yellow)
-![Workflow](https://github.com/CyberSunil/CloudGuard/actions/workflows/cloudguard-scan.yml/badge.svg)
+![CI](https://github.com/CyberSunil/CloudGuard/actions/workflows/cloudguard-scan.yml/badge.svg)
+![Frameworks](https://img.shields.io/badge/Frameworks-CIS%20%7C%20SOC2%20%7C%20PCI%20%7C%20NIST%20%7C%20HIPAA-6f42c1)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 **Run a read-only review → see what's wrong, *where*, and *how to fix it* → prove remediation.**
 
@@ -384,7 +386,7 @@ apt update && apt install cloudguard
 - 📈 Catalog expansion toward ~600 checks (AWS Organizations/SCPs, CloudHSM, Azure Private DNS & Firewall, GCP Cloud NAT & Spanner, OCI Functions & Streaming…)
 - 🔌 Native ScoutSuite / Prowler result ingestion (today: map their output into `comparison_template.csv`)
 - 🌍 Unified multi-cloud risk view for consolidated reporting (today: one dashboard per cloud, by design)
-- 📋 `--frameworks cis` filter and deeper SOC 2 / PCI / NIST / HIPAA control evidence per finding
+- 📋 Deeper SOC 2 / PCI / NIST / HIPAA control evidence attached per finding (beyond the current control-reference mapping)
 
 ---
 
