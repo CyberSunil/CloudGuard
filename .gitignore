@@ -22,3 +22,4 @@ comparison_scan_diff/
 # Reference images (not part of the tool)
 *.png
 !Cloud.png
+!docs/screenshots/*.png
