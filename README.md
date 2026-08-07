@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Cloud.png" alt="CloudGuard logo" width="160"/>
+<img src="Cloud.png" alt="CloudGuard logo" width="100%"/>
 
 # CloudGuard
 
@@ -29,12 +29,12 @@
 
 ## 🎯 The Problem
 
-Cloud security posture assessment today is squeezed between two extremes:
+Cloud security posture assessment today generally falls into two categories:
 
-- **Heavyweight scanners** (Prowler-class) dump thousands of findings you never revisit — and burn read-heavy credentials against production.
-- **Stale tools** (ScoutSuite) have quietly rotted — especially on **Azure**, where identity coverage and result reliability are simply not trustworthy anymore.
+- **Broad scanners** (e.g. Prowler) prioritize check volume and CLI-first workflows, which is powerful for one-off audits but can produce large finding volumes that are hard to revisit and track over time.
+- **Established multi-cloud tools** (e.g. ScoutSuite) pioneered this space, though public activity has slowed in recent years — as of 2026, ScoutSuite's last significant commit was in 2024.
 
-Neither is built for what a **security reviewer actually does**: run a review with *minimum* credentials, explain the risk to a client, hand over a hardening plan, then come back next quarter and **prove the issues are gone**.
+CloudGuard is built around a different use case: the ongoing **review workflow** a security reviewer or consultant actually runs — scan with minimal credentials, explain risk to a client, hand over a hardening plan, then return next quarter and demonstrate what's been fixed.
 
 **CloudGuard exists for that workflow.**
 
@@ -44,18 +44,18 @@ Neither is built for what a **security reviewer actually does**: run a review wi
 > 🖥️ **Dashboard** — a gorgeous, self-contained, offline HTML report per cloud: risk score, service-grouped findings, CIS Benchmark score, coverage, least-privilege reference.  
 > 📤 **GRC-ready exports** — findings-only PDF / Excel / CSV with false-positive exclusions and framework mappings (SOC 2 · PCI DSS · NIST 800-53 · HIPAA).
 
-## 🏆 Why CloudGuard (vs the tools you know)
+## 🏆 How CloudGuard Compares
 
-| | **CloudGuard** 🛡️ | **Prowler** | **ScoutSuite** |
+| | **CloudGuard** | **Prowler** | **ScoutSuite** |
 |---|---|---|---|
-| Clouds | **AWS · Azure · GCP · OCI** (first-class, incl. OCI) | AWS (+limited others) | Multi-cloud, but **unmaintained** |
-| Azure identity depth | ✅ Purpose-built: Entra ID MFA, Conditional Access, Key Vault metadata, blob soft delete | Partial | ❌ The documented weak spot |
-| OCI coverage | ✅ Native SDK checks | ❌ | ⚠️ |
-| Review workflow | ✅ Baseline compare, review mode, drift, remediation rate | CLI-first, no review loop | ❌ |
-| Least-privilege | ✅ First-class: verified templates + access-request docs per cloud | ❌ | ❌ |
-| Dashboard | ✅ One offline HTML report per cloud | ❌ (CLI) | Static HTML |
-| Client exports | ✅ Findings-only PDF/Excel/CSV, false-positive exclusions | ❌ | ❌ |
-| Checks | **321 hand-written, SDK-backed** (120 AWS · 90 Azure · 68 GCP · 43 OCI) | ~300+ broad | ~1000 rule *firings* |
+| Clouds | AWS · Azure · GCP · OCI | AWS (+ partial others) | AWS · Azure · GCP (maintenance has slowed) |
+| Azure identity depth | Entra ID MFA, Conditional Access, Key Vault metadata, blob soft delete | Partial | Limited |
+| OCI coverage | Native SDK checks | Not covered | Beta-level |
+| Review workflow | Baseline compare, review mode, drift, remediation rate | CLI-first, single-pass | Single-pass |
+| Least-privilege | Verified templates + access-request docs per cloud | Not a focus | Not a focus |
+| Dashboard | One offline HTML report per cloud | CLI-based | Static HTML |
+| Client exports | Findings-only PDF/Excel/CSV, false-positive exclusions | Not built in | Not built in |
+| Checks | 321 hand-written, SDK-backed (120 AWS · 90 Azure · 68 GCP · 43 OCI) | 570+, broad coverage | ~1000 rule *firings* (fewer distinct rules) |
 
 **CloudGuard deliberately optimizes for the review workflow — smaller-but-deeper where it matters (Azure, OCI, least-privilege, remediation tracking) instead of broad-but-shallow.**
 
