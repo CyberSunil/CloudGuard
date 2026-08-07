@@ -6,7 +6,7 @@
 
 ### Multi-Cloud Configuration Review, Built for the Reviewer's Actual Workflow
 
-**AWS · Azure · GCP · OCI — one read-only scan, one dashboard per cloud, every finding tracked to closure.**
+**AWS · Azure · GCP · OCI - One read-only scan, One dashboard per cloud, Every finding tracked to closure.**
 
 <br>
 
