@@ -4,7 +4,7 @@
 
 # CloudGuard
 
-### Multi-Cloud Configuration Review & Hardening Dashboard
+### Multi-Cloud Configuration Review, Built for the Reviewer's Actual Workflow
 
 **AWS · Azure · GCP · OCI — one read-only scan, one dashboard per cloud, every finding tracked to closure.**
 
