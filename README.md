@@ -18,7 +18,6 @@
 ![GCP](https://img.shields.io/badge/GCP-68%20checks-4285F4)
 ![OCI](https://img.shields.io/badge/OCI-43%20checks-red)
 ![Demo](https://img.shields.io/badge/demo-no%20credentials-yellow)
-![CI](https://github.com/CyberSunil/CloudGuard/actions/workflows/cloudguard-scan.yml/badge.svg)
 ![Frameworks](https://img.shields.io/badge/Frameworks-CIS%20%7C%20SOC2%20%7C%20PCI%20%7C%20NIST%20%7C%20HIPAA-6f42c1)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
