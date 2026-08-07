@@ -36,6 +36,12 @@ Cloud security posture assessment today generally falls into two categories:
 
 CloudGuard is built around a different use case: the ongoing **review workflow** a security reviewer or consultant actually runs — scan with minimal credentials, explain risk to a client, hand over a hardening plan, then return next quarter and demonstrate what's been fixed.
 
+## 📸 Screenshots
+
+| Findings Dashboard | CIS Benchmark View | Drift Detection |
+|:---:|:---:|:---:|
+| ![Findings dashboard](docs/screenshots/dashboard.png) | ![CIS Benchmark view](docs/screenshots/CIS_Benchmark.png) | ![Summary view](docs/screenshots/summary.png) |
+
 **CloudGuard exists for that workflow.**
 
 > 🔍 **Scan** — read-only review of a customer environment with global-reader / read-only roles (verified least-privilege templates ship per cloud).  
