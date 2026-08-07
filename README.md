@@ -38,7 +38,7 @@ CloudGuard is built around a different use case: the ongoing **review workflow**
 
 ## 📸 Screenshots
 
-| Findings Dashboard | CIS Benchmark View | Drift Detection |
+| Findings Dashboard | CIS Benchmark View | Summary view |
 |:---:|:---:|:---:|
 | ![Findings dashboard](docs/screenshots/dashboard.png) | ![CIS Benchmark view](docs/screenshots/CIS_Benchmark.png) | ![Summary view](docs/screenshots/summary.png) |
 
