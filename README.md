@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="Cloud.png" alt="CloudGuard logo" width="100%"/>
+<img src="Cloud.png" alt="CloudGuard logo" width="200"/>
 
 # CloudGuard
 
@@ -18,6 +18,7 @@
 ![GCP](https://img.shields.io/badge/GCP-68%20checks-4285F4)
 ![OCI](https://img.shields.io/badge/OCI-43%20checks-red)
 ![Demo](https://img.shields.io/badge/demo-no%20credentials-yellow)
+![Workflow](https://github.com/CyberSunil/CloudGuard/actions/workflows/cloudguard-scan.yml/badge.svg)
 
 **Run a read-only review → see what's wrong, *where*, and *how to fix it* → prove remediation.**
 
@@ -80,11 +81,11 @@ Neither is built for what a **security reviewer actually does**: run a review wi
 - [🔑 Scan Credentials (Read-Only by Design)](#-scan-credentials-read-only-by-design)
 - [📊 Baseline CSV Format](#-baseline-csv-format)
 - [📁 Outputs](#-outputs)
-- [🗺️ Mapping Your Own Findings to Check IDs](#️-mapping-your-own-findings-to-check-ids)
+- [🧭 Mapping Your Own Findings to Check IDs](#️-mapping-your-own-findings-to-check-ids)
 - [🧩 Extending the Catalog](#-extending-the-catalog)
 - [📏 Catalog Size vs ScoutSuite / Prowler](#-catalog-size-vs-scoutsuite--prowler)
 - [📦 Packaging & Distribution (apt / dpkg / pip)](#-packaging--distribution-apt--dpkg--pip)
-- [🗺️ Roadmap](#️-roadmap)
+- [📍 Roadmap](#️-roadmap)
 
 ---
 
