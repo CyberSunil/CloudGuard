@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🛡️ CloudGuard
+<img src="Cloud.png" alt="CloudGuard logo" width="100%"/>
+
+# CloudGuard
 
 ### Multi-Cloud Configuration Review & Hardening Dashboard
 
