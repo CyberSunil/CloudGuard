@@ -1,0 +1,7 @@
+cloudguard (1.0.0-1) unstable; urgency=medium
+
+  * Initial release: multi-cloud configuration review with per-cloud HTML
+    dashboards, CIS benchmark + SOC2/PCI/NIST/HIPAA mappings, baseline
+    comparison/review workflow and least-privilege access templates.
+
+ -- CyberSunil <you@example.com>  Thu, 07 Aug 2026 00:00:00 +0000

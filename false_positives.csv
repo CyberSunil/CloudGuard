@@ -1,0 +1,74 @@
+cloud,check_id,check_title,severity,resource,status,reasons
+aws,AWS-RDS-008,Public RDS snapshot,CRITICAL,rds-snapshots,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-S3-005,Account-level S3 block public access disabled,CRITICAL,s3-block-public,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-VPC-004,Default security group allows open ingress,HIGH,default-security-group,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-011,No CloudWatch dashboards,LOW,cloudwatch,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-R53-001,DNSSEC not enabled,LOW,route53,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-BACK-001,No AWS Backup plans,MEDIUM,aws-backup,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CF-004,CloudFront uses default certificate,MEDIUM,cf:E2LEGACY,FAIL,placeholder: resource or detail contains placeholder/dummy markers
+aws,AWS-CW-001,No alarm for unauthorized API calls,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-002,No alarm for failed console sign-ins,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-005,No alarm for CloudTrail changes,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-006,No alarm for console sign-in without MFA,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-007,No alarm for NACL changes,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-008,No alarm for security group changes,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-009,No alarm for S3 bucket policy changes,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-CW-010,No alarm for KMS key changes,MEDIUM,cloudwatch-alarms,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-EC2-005,EBS encryption by default disabled,MEDIUM,account-ebs,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-IAM-007,Role trust allows cross-account or wildcard principals,MEDIUM,role:delegated-role,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-IOT-001,IoT logging level not ERROR,MEDIUM,iot,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-R53-002,DNS query logging not enabled,MEDIUM,route53,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-SES-001,SES identity without verified DKIM,MEDIUM,ses:legacy@example.com,FAIL,placeholder: resource or detail contains placeholder/dummy markers
+aws,AWS-SQS-001,SQS queue publicly accessible,MEDIUM,https://sqs.us-east-1.amazonaws.com/111122223333/alerts,FAIL,weak-evidence: no evidence captured for this finding
+aws,AWS-SQS-002,SQS queue not encrypted,MEDIUM,https://sqs.us-east-1.amazonaws.com/111122223333/alerts,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-IAM-002,MFA not enforced for privileged users,CRITICAL,user:infra-admin@contoso.com,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-IAM-003,No Conditional Access policy enforcing MFA,HIGH,conditional-access,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-IAM-004,Legacy authentication not blocked,HIGH,conditional-access,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-LOG-001,No Log Analytics workspace,HIGH,log-analytics,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-MON-001,Activity log not exported,HIGH,subscription-activity-log,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-RBAC-004,Service principal with Owner/Contributor,HIGH,sp:deploy-svc,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-LOG-002,Log Analytics not encrypted with CMK,LOW,log-analytics,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-RBAC-003,Guest users in the directory,LOW,entra-id-guests,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-DEF-001,Microsoft Defender plans not on Standard,MEDIUM,microsoft-defender,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-LOG-003,Log Analytics retention below 30 days,MEDIUM,log-analytics,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-MON-002,No activity log alert rules,MEDIUM,monitoring,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-NET-001,No Bastion host deployed,MEDIUM,bastion,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-NET-002,No DDoS protection plan,MEDIUM,ddos-protection,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-NET-004,Network Watcher not enabled,MEDIUM,network-watcher,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-POL-001,No Azure Policy assignments,MEDIUM,azure-policy,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-POL-002,Policy exemption without expiration,MEDIUM,azure-policy,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-SEN-001,No Microsoft Sentinel workspace,MEDIUM,sentinel,FAIL,weak-evidence: no evidence captured for this finding
+azure,AZ-SEN-002,Sentinel workspace without analytics rules,MEDIUM,sentinel,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-BQ-001,BigQuery dataset publicly readable,CRITICAL,bq:legacy_exports,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-IAM-002,Primitive role assigned to a human user,CRITICAL,user:admin@example.com,FAIL,placeholder: resource or detail contains placeholder/dummy markers; weak-evidence: no evidence captured for this finding
+gcp,GCP-ST-001,Bucket publicly readable,CRITICAL,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-FW-002,Default VPC contains open firewall rules,HIGH,default-vpc,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-IAM-001,Service account uses user-managed keys,HIGH,sa:svc-ci@demo-prod-gcp-123456.iam.gserviceaccount.com,FAIL,placeholder: resource or detail contains placeholder/dummy markers; weak-evidence: no evidence captured for this finding
+gcp,GCP-LOG-001,Admin activity audit logging disabled,HIGH,project-audit-config,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-ORG-003,OS Login not enforced,HIGH,org-policy,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-BQ-002,BigQuery dataset not using CMEK,LOW,bq:legacy_exports,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-NET-002,DNSSEC not enabled on all zones,LOW,cloud-dns,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-ST-004,Bucket not using customer-managed encryption key,LOW,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-004,Bucket not using customer-managed encryption key,LOW,gs://demo-backups,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-005,Bucket retention policy missing,LOW,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-006,Bucket lifecycle rules missing,LOW,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-006,Bucket lifecycle rules missing,LOW,gs://demo-backups,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-IAM-004,External user in project IAM,MEDIUM,user:vendor@partner.com,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-IAM-005,Service account key older than 90 days,MEDIUM,sa:svc-ci@demo-prod-gcp-123456.iam.gserviceaccount.com,FAIL,placeholder: resource or detail contains placeholder/dummy markers; weak-evidence: no evidence captured for this finding
+gcp,GCP-KMS-001,KMS key rotation not configured,MEDIUM,kms:projects/demo-prod-gcp-123456/locations/global/keyRings/legacy/cryptoKeys/db,FAIL,env: resource name suggests a non-production environment; placeholder: resource or detail contains placeholder/dummy markers
+gcp,GCP-LOG-002,No log sinks for external log export,MEDIUM,log-sinks,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-LOG-003,Data access audit logs disabled,MEDIUM,project-audit-config,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-ORG-001,Domain-restricted sharing not enforced,MEDIUM,org-policies,FAIL,weak-evidence: no evidence captured for this finding
+gcp,GCP-ST-002,Uniform bucket-level access disabled,MEDIUM,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-003,Bucket versioning disabled,MEDIUM,gs://demo-backups,FAIL,env: resource name suggests a non-production environment
+gcp,GCP-ST-007,Bucket access logging disabled,MEDIUM,gs://demo-legacy-public,FAIL,env: resource name suggests a non-production environment
+oci,OCI-DB-005,DB system without backups,CRITICAL,database,FAIL,weak-evidence: no evidence captured for this finding
+oci,OCI-OS-001,Bucket publicly readable,CRITICAL,oci://demo-legacy-share,FAIL,env: resource name suggests a non-production environment
+oci,OCI-DNS-001,DNS zone without DNSSEC,HIGH,dns,FAIL,placeholder: resource or detail contains placeholder/dummy markers
+oci,OCI-OS-004,Bucket has active pre-authenticated requests,HIGH,oci://demo-legacy-share,FAIL,env: resource name suggests a non-production environment
+oci,OCI-OS-003,Bucket not using customer-managed encryption key,LOW,oci://demo-legacy-share,FAIL,env: resource name suggests a non-production environment
+oci,OCI-OS-005,Bucket lifecycle policy missing,LOW,oci://demo-legacy-share,FAIL,env: resource name suggests a non-production environment
+oci,OCI-BST-001,No Bastion service deployed,MEDIUM,bastion,FAIL,weak-evidence: no evidence captured for this finding
+oci,OCI-OS-002,Bucket versioning disabled,MEDIUM,oci://demo-legacy-share,FAIL,env: resource name suggests a non-production environment
+oci,OCI-OSMS-001,OS Management Service not managing instances,MEDIUM,osms,FAIL,weak-evidence: no evidence captured for this finding
+oci,OCI-OSMS-002,No OSMS managed instance groups,MEDIUM,osms,FAIL,weak-evidence: no evidence captured for this finding

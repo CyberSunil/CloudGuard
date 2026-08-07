@@ -1,0 +1,89 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloudguard"
+dynamic = ["version"]
+description = "Multi-cloud configuration review, comparison and dashboarding (AWS, Azure, GCP, OCI)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "CyberSunil" }]
+keywords = ["cloud", "security", "cis", "aws", "azure", "gcp", "oci", "compliance"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+# Demo mode (cloudguard demo) works with the standard library only - the cloud
+# SDKs are optional extras installed on demand per provider.
+dependencies = []
+
+[project.optional-dependencies]
+aws = ["boto3>=1.34.0"]
+azure = [
+    "azure-identity>=1.16.0",
+    "azure-mgmt-resource>=23.1.0",
+    "azure-mgmt-storage>=21.1.0",
+    "azure-mgmt-network>=26.0.0",
+    "azure-mgmt-keyvault>=10.3.0",
+    "azure-mgmt-sql>=4.0.0b16",
+    "azure-mgmt-compute>=32.0.0",
+    "azure-mgmt-monitor>=6.0.2",
+    "azure-mgmt-containerregistry>=10.3.0",
+    "azure-mgmt-web>=7.2.0",
+    "azure-mgmt-cosmosdb>=9.5.0",
+]
+gcp = [
+    "google-cloud-storage>=2.14.0",
+    "google-cloud-resource-manager>=1.12.0",
+    "google-cloud-compute>=1.19.0",
+    "google-cloud-sql>=0.11.0",
+    "google-cloud-kms>=2.21.0",
+    "google-cloud-logging>=3.10.0",
+    "google-cloud-container>=2.42.0",
+]
+oci = ["oci>=2.126.0"]
+all = [
+    "boto3>=1.34.0",
+    "azure-identity>=1.16.0",
+    "azure-mgmt-resource>=23.1.0",
+    "azure-mgmt-storage>=21.1.0",
+    "azure-mgmt-network>=26.0.0",
+    "azure-mgmt-keyvault>=10.3.0",
+    "azure-mgmt-sql>=4.0.0b16",
+    "azure-mgmt-compute>=32.0.0",
+    "azure-mgmt-monitor>=6.0.2",
+    "azure-mgmt-containerregistry>=10.3.0",
+    "azure-mgmt-web>=7.2.0",
+    "azure-mgmt-cosmosdb>=9.5.0",
+    "google-cloud-storage>=2.14.0",
+    "google-cloud-resource-manager>=1.12.0",
+    "google-cloud-compute>=1.19.0",
+    "google-cloud-sql>=0.11.0",
+    "google-cloud-kms>=2.21.0",
+    "google-cloud-logging>=3.10.0",
+    "google-cloud-container>=2.42.0",
+    "oci>=2.126.0",
+]
+
+[project.scripts]
+cloudguard = "cloudsec.cli:main"
+
+[tool.setuptools]
+packages = [
+    "cloudsec",
+    "cloudsec.checks",
+    "cloudsec.collectors",
+    "cloudsec.output",
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "cloudsec.__version__" }
+
+[tool.setuptools.package-data]
+"cloudsec.output" = ["templates/*.html"]

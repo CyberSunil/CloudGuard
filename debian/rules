@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+# Build a self-contained .deb: dh-virtualenv installs the project (including
+# all optional cloud-SDK extras) into a bundled venv under /usr/share/python3.
+%:
+	dh $@ --with python-virtualenv
+
+# Install every cloud provider SDK so live scans work out of the box.
+override_dh_virtualenv:
+	dh_virtualenv --python /usr/bin/python3 \
+		--extra-pip-arg=--no-cache-dir \
+		--extra-pip-arg=".[all]"

@@ -1,0 +1,1652 @@
+{
+  "cloud": "gcp",
+  "account_id": "demo-prod-gcp-123456",
+  "account_name": "demo-prod-gcp",
+  "timestamp": "2026-08-07T11:57:21Z",
+  "principal": "security-reviewer@demo-prod-gcp-123456.iam.gserviceaccount.com",
+  "auth_mode": "demo",
+  "regions": [],
+  "checks_total": 68,
+  "checks_executed": 68,
+  "risk_score": 46.8,
+  "summary": {
+    "by_status": {
+      "FAIL": 68,
+      "PASS": 4
+    },
+    "failed_by_severity": {
+      "HIGH": 12,
+      "CRITICAL": 6,
+      "MEDIUM": 37,
+      "LOW": 13
+    },
+    "failed_by_service": {
+      "IAM": 4,
+      "Cloud Storage": 9,
+      "VPC/Firewall": 3,
+      "Compute": 7,
+      "Cloud SQL": 6,
+      "Cloud KMS": 1,
+      "Cloud Logging": 3,
+      "GKE": 9,
+      "VPC": 1,
+      "Cloud DNS": 1,
+      "BigQuery": 2,
+      "Secret Manager": 1,
+      "Org Policies": 1,
+      "Cloud Run": 5,
+      "Memorystore": 4,
+      "Artifact Registry": 2,
+      "Organization Policies": 1,
+      "Cloud Functions": 2,
+      "Cloud VPN": 1,
+      "Workload Identity": 1,
+      "VPC Network": 1,
+      "Vertex AI": 2,
+      "Pub/Sub": 1
+    },
+    "failed_by_category": {
+      "Identity & Access": 9,
+      "Storage & Data Protection": 3,
+      "Backup & Recovery": 5,
+      "Data Protection": 10,
+      "Network Security": 19,
+      "Compute": 3,
+      "Database": 1,
+      "Key Management": 2,
+      "Logging & Monitoring": 6,
+      "Kubernetes": 6,
+      "Security Posture": 2,
+      "Cost & Security Posture": 1,
+      "Resilience": 1
+    }
+  },
+  "errors": [],
+  "snapshot_summary": {
+    "project_id": 1,
+    "account_name": 1,
+    "principal": 1,
+    "iam": 4,
+    "sa_keys": 2,
+    "buckets": 3,
+    "firewalls": 3,
+    "disks": 2,
+    "instances": 2,
+    "sql": 2,
+    "kms": 2,
+    "audit": 3,
+    "gke": 2,
+    "subnets": 2,
+    "bigquery": 2,
+    "secrets": 2,
+    "dns": 2,
+    "org_policies": 4,
+    "cloudrun": 2,
+    "memorystore": 2,
+    "artifact_repos": 2,
+    "functions": 2,
+    "vpn_tunnels": 2,
+    "wipools": 2,
+    "vertex_ai": 1,
+    "pubsub": 2
+  },
+  "extra": {
+    "frameworks": [],
+    "privilege_check": {
+      "level": "readonly",
+      "warnings": []
+    }
+  },
+  "findings": [
+    {
+      "check_id": "GCP-IAM-001",
+      "check_title": "Service account uses user-managed keys",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sa:svc-ci@demo-prod-gcp-123456.iam.gserviceaccount.com",
+      "detail": "Service account has 1 user-managed JSON key(s) (long-lived credentials).",
+      "remediation": "Delete user-managed keys and use workload identity / impersonation.",
+      "evidence": {},
+      "cis": "CIS GCP 1.1"
+    },
+    {
+      "check_id": "GCP-IAM-002",
+      "check_title": "Primitive role assigned to a human user",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "user:admin@example.com",
+      "detail": "Primitive role roles/owner assigned to a human user.",
+      "remediation": "Replace primitive roles with least-privilege custom roles and groups.",
+      "evidence": {},
+      "cis": "CIS GCP 1.4"
+    },
+    {
+      "check_id": "GCP-IAM-003",
+      "check_title": "Project IAM binding grants anonymous/all-authenticated access",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "project-iam",
+      "detail": "No bindings for allUsers / allAuthenticatedUsers.",
+      "remediation": "Remove public bindings; use signed URLs / IAP where sharing is required.",
+      "evidence": {},
+      "cis": "CIS GCP 1.6"
+    },
+    {
+      "check_id": "GCP-ST-001",
+      "check_title": "Bucket publicly readable",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "Bucket is publicly readable (allUsers in IAM policy or legacy ACL).",
+      "remediation": "Remove allUsers/allAuthenticatedUsers bindings and enable public access prevention.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": "CIS GCP 2.1"
+    },
+    {
+      "check_id": "GCP-ST-002",
+      "check_title": "Uniform bucket-level access disabled",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Storage & Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "Uniform bucket-level access is disabled (legacy object ACLs in use).",
+      "remediation": "Enable uniform bucket-level access on all buckets.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": "CIS GCP 2.8"
+    },
+    {
+      "check_id": "GCP-ST-003",
+      "check_title": "Bucket versioning disabled",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gs://demo-backups",
+      "detail": "Object versioning is disabled.",
+      "remediation": "Enable versioning on buckets holding mutable data.",
+      "evidence": {
+        "config": {
+          "name": "demo-backups",
+          "public": false,
+          "uniform": true,
+          "versioning": false,
+          "cmek": false,
+          "retention": true,
+          "lifecycle": false,
+          "logging": true
+        }
+      },
+      "cis": "CIS GCP 2.10"
+    },
+    {
+      "check_id": "GCP-ST-004",
+      "check_title": "Bucket not using customer-managed encryption key",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "Bucket uses Google-managed encryption keys, not a CMEK.",
+      "remediation": "Configure default KMS keys on buckets where required.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ST-004",
+      "check_title": "Bucket not using customer-managed encryption key",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "gs://demo-backups",
+      "detail": "Bucket uses Google-managed encryption keys, not a CMEK.",
+      "remediation": "Configure default KMS keys on buckets where required.",
+      "evidence": {
+        "config": {
+          "name": "demo-backups",
+          "public": false,
+          "uniform": true,
+          "versioning": false,
+          "cmek": false,
+          "retention": true,
+          "lifecycle": false,
+          "logging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-FW-001",
+      "check_title": "Firewall rule exposes management ports to the internet",
+      "cloud": "gcp",
+      "service": "VPC/Firewall",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "fw:allow-https",
+      "detail": "Firewall rule exposes ports [443] to 0.0.0.0/0.",
+      "remediation": "Restrict source ranges; use IAP tunnel for SSH and remove broad rules.",
+      "evidence": {
+        "open_ports": [
+          443
+        ],
+        "config": {
+          "name": "allow-https",
+          "network": "prod-vpc",
+          "allowed": [
+            {
+              "proto": "tcp",
+              "ports": [
+                "443"
+              ]
+            }
+          ],
+          "source_ranges": [
+            "0.0.0.0/0"
+          ],
+          "disabled": false,
+          "logging": true
+        }
+      },
+      "cis": "CIS GCP 3.6"
+    },
+    {
+      "check_id": "GCP-FW-001",
+      "check_title": "Firewall rule exposes management ports to the internet",
+      "cloud": "gcp",
+      "service": "VPC/Firewall",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "fw:allow-ssh-legacy",
+      "detail": "Firewall rule exposes ports [22] to 0.0.0.0/0.",
+      "remediation": "Restrict source ranges; use IAP tunnel for SSH and remove broad rules.",
+      "evidence": {
+        "open_ports": [
+          22
+        ],
+        "config": {
+          "name": "allow-ssh-legacy",
+          "network": "default",
+          "allowed": [
+            {
+              "proto": "tcp",
+              "ports": [
+                "22"
+              ]
+            }
+          ],
+          "source_ranges": [
+            "0.0.0.0/0"
+          ],
+          "disabled": false,
+          "logging": false
+        }
+      },
+      "cis": "CIS GCP 3.6"
+    },
+    {
+      "check_id": "GCP-FW-002",
+      "check_title": "Default VPC contains open firewall rules",
+      "cloud": "gcp",
+      "service": "VPC/Firewall",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "default-vpc",
+      "detail": "Default VPC contains open firewall rules: allow-ssh-legacy.",
+      "remediation": "Disable the default network; create hardened VPCs with deny-by-default rules.",
+      "evidence": {},
+      "cis": "CIS GCP 3.1"
+    },
+    {
+      "check_id": "GCP-CMP-001",
+      "check_title": "Disk not using customer-managed encryption key",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "disk:legacy-vm-disk",
+      "detail": "Disk uses Google-managed key, not CMEK.",
+      "remediation": "Use CMEK for disks where compliance requires key control.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-002",
+      "check_title": "Shielded VM disabled",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "instance:legacy-vm",
+      "detail": "Shielded VM (secure boot / vTPM / integrity monitoring) is disabled.",
+      "remediation": "Enable secure boot, vTPM and integrity monitoring on instances.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": "CIS GCP 4.3"
+    },
+    {
+      "check_id": "GCP-SQL-001",
+      "check_title": "Cloud SQL instance only has public IP",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Database",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Cloud SQL instance only has a public IP address.",
+      "remediation": "Assign a private IP and disable public IP on Cloud SQL instances.",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": "CIS GCP 6.1"
+    },
+    {
+      "check_id": "GCP-SQL-002",
+      "check_title": "Cloud SQL does not require SSL",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Cloud SQL does not require SSL/TLS connections.",
+      "remediation": "Set require_ssl=true (and enforce TLS 1.2+).",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": "CIS GCP 6.2"
+    },
+    {
+      "check_id": "GCP-SQL-003",
+      "check_title": "Cloud SQL automated backups disabled",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Automated backups are disabled.",
+      "remediation": "Enable automated backups with a suitable retention window.",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": "CIS GCP 6.6"
+    },
+    {
+      "check_id": "GCP-KMS-001",
+      "check_title": "KMS key rotation not configured",
+      "cloud": "gcp",
+      "service": "Cloud KMS",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "kms:projects/demo-prod-gcp-123456/locations/global/keyRings/legacy/cryptoKeys/db",
+      "detail": "KMS key rotation is not configured (or period > 90 days).",
+      "remediation": "Configure rotation period <= 90 days for symmetric keys.",
+      "evidence": {
+        "config": {
+          "key": "projects/demo-prod-gcp-123456/locations/global/keyRings/legacy/cryptoKeys/db",
+          "rotation_period_days": 0
+        }
+      },
+      "cis": "CIS GCP 1.9"
+    },
+    {
+      "check_id": "GCP-LOG-001",
+      "check_title": "Admin activity audit logging disabled",
+      "cloud": "gcp",
+      "service": "Cloud Logging",
+      "category": "Logging & Monitoring",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "project-audit-config",
+      "detail": "Admin activity audit logging is not enabled for the project.",
+      "remediation": "Enable admin activity (and optionally data access) audit logs for all services.",
+      "evidence": {},
+      "cis": "CIS GCP 2.12"
+    },
+    {
+      "check_id": "GCP-LOG-002",
+      "check_title": "No log sinks for external log export",
+      "cloud": "gcp",
+      "service": "Cloud Logging",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "log-sinks",
+      "detail": "No log sinks export logs to an external SIEM/storage for retention and correlation.",
+      "remediation": "Create log sinks to BigQuery/PubSub/Storage with a retention policy.",
+      "evidence": {},
+      "cis": "CIS GCP 2.13"
+    },
+    {
+      "check_id": "GCP-GKE-001",
+      "check_title": "GKE cluster is not private",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "GKE cluster nodes have public IPs (not a private cluster).",
+      "remediation": "Create private clusters with authorized networks and no public endpoint.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": "CIS GKE 1.3.1"
+    },
+    {
+      "check_id": "GCP-GKE-002",
+      "check_title": "GKE network policy disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Network policy is not enabled on the cluster.",
+      "remediation": "Enable NetworkPolicy enforcement on the cluster.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": "CIS GKE 1.2.5"
+    },
+    {
+      "check_id": "GCP-GKE-003",
+      "check_title": "GKE uses legacy ABAC / no release channel",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Legacy ABAC authorization is enabled (cluster-wide permissions); cluster is not enrolled in a release channel (misses managed security upgrades).",
+      "remediation": "Disable ABAC and enroll the cluster in a release channel.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": "CIS GKE 1.1.1"
+    },
+    {
+      "check_id": "GCP-IAM-004",
+      "check_title": "External user in project IAM",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "user:vendor@partner.com",
+      "detail": "External identity user:vendor@partner.com holds roles/viewer; verify it is required and governed.",
+      "remediation": "Remove external users or manage them through identity federation and access reviews.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-IAM-005",
+      "check_title": "Service account key older than 90 days",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sa:svc-ci@demo-prod-gcp-123456.iam.gserviceaccount.com",
+      "detail": "Service account key is 210 days old (rotate within 90 days).",
+      "remediation": "Rotate keys and move workloads to workload identity.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ST-005",
+      "check_title": "Bucket retention policy missing",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "Bucket has no retention policy; deleted objects cannot be recovered.",
+      "remediation": "Configure retention policies on buckets holding regulated data.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ST-006",
+      "check_title": "Bucket lifecycle rules missing",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "No lifecycle rules; stale or redundant objects accumulate cost and risk.",
+      "remediation": "Define lifecycle rules to transition and delete stale objects.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ST-006",
+      "check_title": "Bucket lifecycle rules missing",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "gs://demo-backups",
+      "detail": "No lifecycle rules; stale or redundant objects accumulate cost and risk.",
+      "remediation": "Define lifecycle rules to transition and delete stale objects.",
+      "evidence": {
+        "config": {
+          "name": "demo-backups",
+          "public": false,
+          "uniform": true,
+          "versioning": false,
+          "cmek": false,
+          "retention": true,
+          "lifecycle": false,
+          "logging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-003",
+      "check_title": "Instance has an external IP",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "instance:web-vm",
+      "detail": "Instance has an external IP; prefer IAP or Cloud NAT for egress.",
+      "remediation": "Remove external IPs and use IAP/Cloud NAT.",
+      "evidence": {
+        "config": {
+          "name": "web-vm-disk",
+          "cmek": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-003",
+      "check_title": "Instance has an external IP",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "instance:legacy-vm",
+      "detail": "Instance has an external IP; prefer IAP or Cloud NAT for egress.",
+      "remediation": "Remove external IPs and use IAP/Cloud NAT.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-NET-001",
+      "check_title": "Subnet VPC flow logs disabled",
+      "cloud": "gcp",
+      "service": "VPC",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "subnet:legacy-subnet",
+      "detail": "VPC flow logs are not enabled on this subnet.",
+      "remediation": "Enable VPC flow logs on subnets (sampled 50%).",
+      "evidence": {
+        "config": {
+          "name": "legacy-subnet",
+          "region": "us-central1",
+          "enable_flow_logs": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-NET-002",
+      "check_title": "DNSSEC not enabled on all zones",
+      "cloud": "gcp",
+      "service": "Cloud DNS",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "cloud-dns",
+      "detail": "DNSSEC enabled on 1/3 managed zones.",
+      "remediation": "Enable DNSSEC on production managed zones.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-SQL-004",
+      "check_title": "Cloud SQL not encrypted with CMEK",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Cloud SQL not encrypted with CMEK.",
+      "remediation": "Encrypt instances with CMEK where required.",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-SQL-005",
+      "check_title": "Cloud SQL authorized networks include 0.0.0.0/0",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Authorized networks include 0.0.0.0/0 (open to the internet).",
+      "remediation": "Remove 0.0.0.0/0 and restrict to trusted CIDRs / private IP.",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-004",
+      "check_title": "GKE Workload Identity disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Workload Identity is not enabled; pods must use long-lived keys or node IAM.",
+      "remediation": "Enable Workload Identity on the cluster and namespaces.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-005",
+      "check_title": "GKE shielded nodes disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Shielded nodes are disabled; nodes lack secure boot and integrity monitoring.",
+      "remediation": "Enable shielded nodes (secure boot + integrity monitoring).",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-006",
+      "check_title": "GKE master endpoint publicly accessible",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Cluster master endpoint is publicly accessible (private endpoint access disabled).",
+      "remediation": "Enable private endpoint access and disable public access.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-007",
+      "check_title": "GKE logging or monitoring disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "gke-clusters",
+      "detail": "All clusters send logs and metrics.",
+      "remediation": "Enable Cloud Logging and Cloud Monitoring for the cluster.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-BQ-001",
+      "check_title": "BigQuery dataset publicly readable",
+      "cloud": "gcp",
+      "service": "BigQuery",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "bq:legacy_exports",
+      "detail": "BigQuery dataset is publicly readable (allUsers binding).",
+      "remediation": "Remove allUsers/allAuthenticatedUsers bindings.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-BQ-002",
+      "check_title": "BigQuery dataset not using CMEK",
+      "cloud": "gcp",
+      "service": "BigQuery",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "bq:legacy_exports",
+      "detail": "Dataset uses Google-managed keys, not CMEK.",
+      "remediation": "Set a default CMEK on datasets where required.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-SM-001",
+      "check_title": "Secret rotation not configured",
+      "cloud": "gcp",
+      "service": "Secret Manager",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "secret:legacy-api-key",
+      "detail": "Secret rotation policy is not configured.",
+      "remediation": "Configure rotation periods on all secrets.",
+      "evidence": {
+        "config": {
+          "name": "legacy-api-key",
+          "rotation": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ORG-001",
+      "check_title": "Domain-restricted sharing not enforced",
+      "cloud": "gcp",
+      "service": "Org Policies",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "org-policies",
+      "detail": "The iam.allowedPolicyMemberDomains constraint is not enforced; external principals can be added to IAM.",
+      "remediation": "Enforce domain-restricted sharing at the organization.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ORG-002",
+      "check_title": "VM external IP constraint not enforced",
+      "cloud": "gcp",
+      "service": "Org Policies",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "org-policies",
+      "detail": "VM external IP constraint - enforced.",
+      "remediation": "Restrict compute.vmExternalIpAccess at the organization.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-LOG-003",
+      "check_title": "Data access audit logs disabled",
+      "cloud": "gcp",
+      "service": "Cloud Logging",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "project-audit-config",
+      "detail": "Data access audit logging is not enabled (only admin activity is captured).",
+      "remediation": "Enable DATA_READ/DATA_WRITE audit logs for sensitive services.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CR-001",
+      "check_title": "Cloud Run allows unauthenticated invocation",
+      "cloud": "gcp",
+      "service": "Cloud Run",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "run:public-api",
+      "detail": "Cloud Run service allows unauthenticated invocation (allUsers/allAuthenticatedUsers).",
+      "remediation": "Remove allUsers/allAuthenticatedUsers from the service IAM policy; require authentication.",
+      "evidence": {
+        "config": {
+          "name": "public-api",
+          "unauthenticated": true,
+          "ingress_all": true,
+          "cpu_always_allocated": false,
+          "max_instances": 10,
+          "vpc_connector": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CR-002",
+      "check_title": "Cloud Run accepts all internet traffic",
+      "cloud": "gcp",
+      "service": "Cloud Run",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "run:public-api",
+      "detail": "Cloud Run service accepts traffic from the internet (ingress all).",
+      "remediation": "Restrict ingress to internal/LB traffic.",
+      "evidence": {
+        "config": {
+          "name": "public-api",
+          "unauthenticated": true,
+          "ingress_all": true,
+          "cpu_always_allocated": false,
+          "max_instances": 10,
+          "vpc_connector": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-MEM-001",
+      "check_title": "Memorystore transit encryption disabled",
+      "cloud": "gcp",
+      "service": "Memorystore",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "memorystore:cache-legacy",
+      "detail": "Memorystore transit encryption (TLS) is disabled.",
+      "remediation": "Enable transit encryption (SERVER_AUTHENTICATION).",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "transit_encryption": false,
+          "auth_enabled": false,
+          "private_ip": false,
+          "persistence": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-MEM-002",
+      "check_title": "Memorystore AUTH disabled",
+      "cloud": "gcp",
+      "service": "Memorystore",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "memorystore:cache-legacy",
+      "detail": "Memorystore AUTH is disabled; anyone who can reach the instance can read/write data.",
+      "remediation": "Enable AUTH with a strong password or IAM auth.",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "transit_encryption": false,
+          "auth_enabled": false,
+          "private_ip": false,
+          "persistence": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-MEM-003",
+      "check_title": "Memorystore instance has public IP",
+      "cloud": "gcp",
+      "service": "Memorystore",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "memorystore:cache-legacy",
+      "detail": "Memorystore instance has a public IP; no private service connect.",
+      "remediation": "Use Private Service Connect / VPC peering with private IPs.",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "transit_encryption": false,
+          "auth_enabled": false,
+          "private_ip": false,
+          "persistence": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-004",
+      "check_title": "Serial port access enabled",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "instance:legacy-vm",
+      "detail": "Serial port access is enabled; interactive console access bypasses SSH controls.",
+      "remediation": "Disable serial-port-enable metadata on instances.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-005",
+      "check_title": "Confidential computing not enabled",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "instance:legacy-vm",
+      "detail": "Confidential computing is not enabled on the instance.",
+      "remediation": "Enable confidential computing on sensitive workloads.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ST-007",
+      "check_title": "Bucket access logging disabled",
+      "cloud": "gcp",
+      "service": "Cloud Storage",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gs://demo-legacy-public",
+      "detail": "Access logging is not enabled on the bucket.",
+      "remediation": "Enable access logging to a dedicated log bucket.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-public",
+          "public": true,
+          "uniform": false,
+          "versioning": true,
+          "cmek": false,
+          "retention": false,
+          "lifecycle": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-IAM-006",
+      "check_title": "Primitive role assigned to a service account",
+      "cloud": "gcp",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "project-iam",
+      "detail": "No primitive roles on service accounts.",
+      "remediation": "Replace primitive roles with least-privilege roles.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CR-003",
+      "check_title": "Cloud Run CPU throttling disabled",
+      "cloud": "gcp",
+      "service": "Cloud Run",
+      "category": "Cost & Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "run:internal-svc",
+      "detail": "CPU is always allocated (throttling disabled); billing and attack surface increase.",
+      "remediation": "Re-enable CPU throttling for request-driven services.",
+      "evidence": {
+        "config": {
+          "name": "internal-svc",
+          "unauthenticated": false,
+          "ingress_all": false,
+          "cpu_always_allocated": true,
+          "max_instances": 0,
+          "vpc_connector": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CR-004",
+      "check_title": "Cloud Run unlimited max instances",
+      "cloud": "gcp",
+      "service": "Cloud Run",
+      "category": "Resilience",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "run:internal-svc",
+      "detail": "Maximum instances is unlimited; a traffic spike can scale without bound.",
+      "remediation": "Set a maximum instance count per service.",
+      "evidence": {
+        "config": {
+          "name": "internal-svc",
+          "unauthenticated": false,
+          "ingress_all": false,
+          "cpu_always_allocated": true,
+          "max_instances": 0,
+          "vpc_connector": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-AR-001",
+      "check_title": "Artifact Registry repository public",
+      "cloud": "gcp",
+      "service": "Artifact Registry",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "artifact:legacy-images",
+      "detail": "Artifact Registry repository is publicly readable.",
+      "remediation": "Remove allUsers/allAuthenticatedUsers from repository IAM.",
+      "evidence": {
+        "config": {
+          "name": "legacy-images",
+          "public": true,
+          "cmk": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-AR-002",
+      "check_title": "Artifact Registry without CMK",
+      "cloud": "gcp",
+      "service": "Artifact Registry",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "artifact:legacy-images",
+      "detail": "Repository is not encrypted with a customer-managed key.",
+      "remediation": "Configure a customer-managed encryption key.",
+      "evidence": {
+        "config": {
+          "name": "legacy-images",
+          "public": true,
+          "cmk": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-008",
+      "check_title": "GKE node auto-upgrade disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Node auto-upgrade is disabled; node OS and kubelet fixes are applied late.",
+      "remediation": "Enable node auto-upgrade on all node pools.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-009",
+      "check_title": "GKE node auto-repair disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Node auto-repair is disabled; unhealthy nodes are not replaced automatically.",
+      "remediation": "Enable node auto-repair on all node pools.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CMP-006",
+      "check_title": "Instance deletion protection disabled",
+      "cloud": "gcp",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vm:legacy-vm",
+      "detail": "Instance deletion protection is disabled; an accidental delete destroys the VM.",
+      "remediation": "Enable deletion protection on production instances.",
+      "evidence": {
+        "config": {
+          "name": "legacy-vm-disk",
+          "cmek": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-ORG-003",
+      "check_title": "OS Login not enforced",
+      "cloud": "gcp",
+      "service": "Organization Policies",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "org-policy",
+      "detail": "OS Login is not enforced; instances rely on SSH keys that are hard to revoke.",
+      "remediation": "Enforce the compute.requireOsLogin organization constraint.",
+      "evidence": {},
+      "cis": "CIS GCP 4.7"
+    },
+    {
+      "check_id": "GCP-SQL-006",
+      "check_title": "Cloud SQL point-in-time recovery disabled",
+      "cloud": "gcp",
+      "service": "Cloud SQL",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sql:legacy-db",
+      "detail": "Point-in-time recovery is disabled; data can only be restored to the last backup.",
+      "remediation": "Enable point-in-time recovery in backup configuration.",
+      "evidence": {
+        "config": {
+          "name": "legacy-db",
+          "private_ip": false,
+          "require_ssl": false,
+          "backup_enabled": false,
+          "cmek": false,
+          "broad_authorized_networks": true,
+          "pitr": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-MEM-004",
+      "check_title": "Memorystore persistence disabled",
+      "cloud": "gcp",
+      "service": "Memorystore",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "redis:cache-legacy",
+      "detail": "Persistence is disabled; cached data is lost on failover or maintenance.",
+      "remediation": "Enable RDB/AOF persistence on production caches.",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "transit_encryption": false,
+          "auth_enabled": false,
+          "private_ip": false,
+          "persistence": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-FUNC-001",
+      "check_title": "Cloud Function publicly invokable",
+      "cloud": "gcp",
+      "service": "Cloud Functions",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "fn:pub-fn",
+      "detail": "Cloud Function is publicly invokable by any caller.",
+      "remediation": "Require authentication on the function trigger.",
+      "evidence": {
+        "config": {
+          "name": "pub-fn",
+          "unauthenticated": true,
+          "vpc_connector": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-FUNC-002",
+      "check_title": "Cloud Function without VPC connector",
+      "cloud": "gcp",
+      "service": "Cloud Functions",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "fn:pub-fn",
+      "detail": "Cloud Function has no VPC connector; it cannot reach private resources securely.",
+      "remediation": "Attach a VPC connector for private resource access.",
+      "evidence": {
+        "config": {
+          "name": "pub-fn",
+          "unauthenticated": true,
+          "vpc_connector": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-VPN-001",
+      "check_title": "VPN tunnel using IKEv1",
+      "cloud": "gcp",
+      "service": "Cloud VPN",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vpn:tunnel-legacy",
+      "detail": "Tunnel uses IKEv1; the deprecated protocol is weaker and unsupported for new use.",
+      "remediation": "Recreate tunnels with IKEv2.",
+      "evidence": {
+        "config": {
+          "name": "tunnel-legacy",
+          "ike_version": 1
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-WI-001",
+      "check_title": "Workload identity pool without provider",
+      "cloud": "gcp",
+      "service": "Workload Identity",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "wipool:legacy-pool",
+      "detail": "Workload identity pool has no OIDC/JWT provider; external federation cannot be trusted.",
+      "remediation": "Add an OIDC/JWT provider to the pool or remove it.",
+      "evidence": {
+        "config": {
+          "name": "legacy-pool",
+          "providers": 0
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-NET-003",
+      "check_title": "VPC firewall logging disabled",
+      "cloud": "gcp",
+      "service": "VPC Network",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "fw:allow-ssh-legacy",
+      "detail": "Firewall rule logging is disabled; denied/allowed traffic is not recorded.",
+      "remediation": "Enable firewall rule logging for production rules.",
+      "evidence": {
+        "config": {
+          "name": "allow-ssh-legacy",
+          "network": "default",
+          "allowed": [
+            {
+              "proto": "tcp",
+              "ports": [
+                "22"
+              ]
+            }
+          ],
+          "source_ranges": [
+            "0.0.0.0/0"
+          ],
+          "disabled": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-GKE-010",
+      "check_title": "GKE Binary Authorization disabled",
+      "cloud": "gcp",
+      "service": "GKE",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "gke:legacy-cluster",
+      "detail": "Binary Authorization is disabled; unsigned or malicious images can be deployed.",
+      "remediation": "Enable Binary Authorization (GKE default deny) on clusters.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cluster",
+          "private_cluster": false,
+          "network_policy": false,
+          "legacy_abac": true,
+          "release_channel": null,
+          "workload_identity": false,
+          "shielded_nodes": false,
+          "private_endpoint": false,
+          "logging_service": "none",
+          "monitoring_service": "none",
+          "node_auto_upgrade": false,
+          "node_auto_repair": false,
+          "binary_authorization": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-CR-005",
+      "check_title": "Cloud Run without VPC connector",
+      "cloud": "gcp",
+      "service": "Cloud Run",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "run:public-api",
+      "detail": "Cloud Run service has no VPC connector; it cannot reach private resources securely.",
+      "remediation": "Attach a VPC connector to the service.",
+      "evidence": {
+        "config": {
+          "name": "public-api",
+          "unauthenticated": true,
+          "ingress_all": true,
+          "cpu_always_allocated": false,
+          "max_instances": 10,
+          "vpc_connector": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-VA-001",
+      "check_title": "Vertex AI notebook with public external IP",
+      "cloud": "gcp",
+      "service": "Vertex AI",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vertex-notebook:ml-lab-legacy",
+      "detail": "Vertex AI notebook has a public external IP; Jupyter access and the instance are reachable from the internet.",
+      "remediation": "Create notebooks in a VPC with no external IP; access via IAP or a bastion host.",
+      "evidence": {
+        "config": {
+          "name": "ml-lab",
+          "external_ip": false,
+          "cmek": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-VA-002",
+      "check_title": "Vertex AI notebook without CMEK",
+      "cloud": "gcp",
+      "service": "Vertex AI",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vertex-notebook:ml-lab-legacy",
+      "detail": "Vertex AI notebook disks are not encrypted with a customer-managed key (CMEK).",
+      "remediation": "Attach a customer-managed encryption key (CMEK) when creating the notebook instance.",
+      "evidence": {
+        "config": {
+          "name": "ml-lab",
+          "external_ip": false,
+          "cmek": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "GCP-PS-001",
+      "check_title": "Pub/Sub topic not CMEK-encrypted",
+      "cloud": "gcp",
+      "service": "Pub/Sub",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "pubsub:events-legacy",
+      "detail": "Pub/Sub topic is not encrypted with a customer-managed key (CMEK); message data is protected only by Google-managed keys.",
+      "remediation": "Enable customer-managed encryption (CMEK) on the topic at creation time.",
+      "evidence": {
+        "config": {
+          "name": "events-legacy",
+          "cmek": false
+        }
+      },
+      "cis": null
+    }
+  ]
+}

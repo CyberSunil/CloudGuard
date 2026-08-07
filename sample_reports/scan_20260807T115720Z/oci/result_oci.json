@@ -1,0 +1,1070 @@
+{
+  "cloud": "oci",
+  "account_id": "ocid1.tenancy.oc1..demo",
+  "account_name": "demo-prod-oci",
+  "timestamp": "2026-08-07T11:57:21Z",
+  "principal": "ocid1.user.oc1..demouser",
+  "auth_mode": "demo",
+  "regions": [],
+  "checks_total": 43,
+  "checks_executed": 43,
+  "risk_score": 43.0,
+  "summary": {
+    "by_status": {
+      "PASS": 4,
+      "FAIL": 41
+    },
+    "failed_by_severity": {
+      "LOW": 12,
+      "CRITICAL": 4,
+      "MEDIUM": 18,
+      "HIGH": 7
+    },
+    "failed_by_service": {
+      "IAM": 5,
+      "Object Storage": 6,
+      "VCN/Security Lists": 1,
+      "VCN/NSG": 2,
+      "Block Storage": 3,
+      "Autonomous Database": 5,
+      "Vault": 1,
+      "VCN/Subnets": 1,
+      "VCN": 2,
+      "Load Balancer": 3,
+      "Bastion": 1,
+      "File Storage": 2,
+      "OS Management": 2,
+      "VCN/Route Tables": 1,
+      "Audit": 1,
+      "NoSQL Database": 1,
+      "DNS": 1,
+      "Database": 1,
+      "API Gateway": 2
+    },
+    "failed_by_category": {
+      "Identity & Access": 5,
+      "Storage & Data Protection": 1,
+      "Backup & Recovery": 7,
+      "Data Protection": 4,
+      "Network Security": 14,
+      "Database": 1,
+      "Key Management": 1,
+      "Logging & Monitoring": 2,
+      "Security Posture": 4,
+      "Cost & Resilience": 1,
+      "Resilience": 1
+    }
+  },
+  "errors": [],
+  "snapshot_summary": {
+    "tenancy": 1,
+    "account_name": 1,
+    "principal": 1,
+    "users": 2,
+    "policies": 2,
+    "buckets": 2,
+    "sec_lists": 2,
+    "nsgs": 2,
+    "volumes": 2,
+    "adbs": 2,
+    "keys": 2,
+    "cloud_guard": 2,
+    "subnets": 2,
+    "igws": 2,
+    "lbs": 2,
+    "bastion": 1,
+    "filesystems": 2,
+    "route_tables": 2,
+    "nat_gateways": 1,
+    "osms": 2,
+    "audit": 1,
+    "nosql_tables": 2,
+    "dns_zones": 2,
+    "db_backups": 2,
+    "api_gateways": 2
+  },
+  "extra": {
+    "frameworks": [],
+    "privilege_check": {
+      "level": "elevated",
+      "warnings": [
+        "Policy 'Network-Admins-Policy' grants manage all-resources in tenancy - prefer a read-only policy group."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "check_id": "OCI-IAM-001",
+      "check_title": "OCI user without MFA",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "iam-users",
+      "detail": "All console users have MFA enrolled.",
+      "remediation": "Enforce MFA for all console users via the Identity policy 'mfa-totp' and group policy.",
+      "evidence": {
+        "config": {
+          "items": [
+            {
+              "name": "demo.admin",
+              "mfa_enabled": true,
+              "has_console_password": true,
+              "api_keys": 0,
+              "max_api_key_age": 0
+            },
+            {
+              "name": "demo.svc",
+              "mfa_enabled": false,
+              "has_console_password": false,
+              "api_keys": 2,
+              "max_api_key_age": 240
+            }
+          ],
+          "total": 2
+        }
+      },
+      "cis": "CIS OCI 1.7"
+    },
+    {
+      "check_id": "OCI-IAM-002",
+      "check_title": "User holds long-lived API signing keys",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "user:demo.svc",
+      "detail": "User has 2 long-lived API signing key(s).",
+      "remediation": "Use instance principals / resource principals and rotate keys regularly.",
+      "evidence": {
+        "api_keys": 2,
+        "config": {
+          "name": "demo.svc",
+          "mfa_enabled": false,
+          "has_console_password": false,
+          "api_keys": 2,
+          "max_api_key_age": 240
+        }
+      },
+      "cis": "CIS OCI 1.8"
+    },
+    {
+      "check_id": "OCI-IAM-003",
+      "check_title": "IAM policy grants broad manage all-resources",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "policy:Network-Admins-Policy",
+      "detail": "Policy contains statements granting manage all-resources (tenancy/root compartment).",
+      "remediation": "Scope policies to compartments and specific resource-types; audit with Policy Analyzer.",
+      "evidence": {
+        "config": {
+          "name": "Network-Admins-Policy",
+          "statements": [
+            "Allow group Network-Admins to manage all-resources in tenancy"
+          ],
+          "broad_manage": true
+        }
+      },
+      "cis": "CIS OCI 1.2"
+    },
+    {
+      "check_id": "OCI-OS-001",
+      "check_title": "Bucket publicly readable",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "oci://demo-legacy-share",
+      "detail": "Bucket is publicly readable (public access type: ObjectRead).",
+      "remediation": "Set public access type to NoPublicAccess and review bucket policies.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": "CIS OCI 4.1"
+    },
+    {
+      "check_id": "OCI-OS-002",
+      "check_title": "Bucket versioning disabled",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "oci://demo-legacy-share",
+      "detail": "Bucket versioning is disabled.",
+      "remediation": "Enable versioning on buckets holding mutable data.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OS-003",
+      "check_title": "Bucket not using customer-managed encryption key",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "oci://demo-legacy-share",
+      "detail": "Bucket uses Oracle-managed keys, not a Vault customer key.",
+      "remediation": "Encrypt buckets with a Vault-managed key where required.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-001",
+      "check_title": "Security list exposes management ports to the internet",
+      "cloud": "oci",
+      "service": "VCN/Security Lists",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "seclist:sl-web",
+      "detail": "Security list exposes ports [22, 443] to 0.0.0.0/0.",
+      "remediation": "Restrict security list ingress to trusted CIDRs; use OCI Bastion service for SSH.",
+      "evidence": {
+        "open_ports": [
+          22,
+          443
+        ],
+        "config": {
+          "id": "ocid1.securitylist.oc1..slweb",
+          "name": "sl-web",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "src": "0.0.0.0/0",
+              "ports": [
+                443,
+                443
+              ]
+            },
+            {
+              "proto": "tcp",
+              "src": "0.0.0.0/0",
+              "ports": [
+                22,
+                22
+              ]
+            }
+          ]
+        }
+      },
+      "cis": "CIS OCI 2.1 / 2.2"
+    },
+    {
+      "check_id": "OCI-NET-002",
+      "check_title": "NSG allows open ingress to management ports",
+      "cloud": "oci",
+      "service": "VCN/NSG",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "nsg:nsg-legacy",
+      "detail": "NSG contains an ingress rule open to 0.0.0.0/0 on management ports.",
+      "remediation": "Scope NSG ingress rules to specific source CIDRs and ports.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.nsg.oc1..nsglegacy",
+          "name": "nsg-legacy",
+          "open_ingress": true,
+          "referenced": false
+        }
+      },
+      "cis": "CIS OCI 2.3 / 2.4"
+    },
+    {
+      "check_id": "OCI-BV-001",
+      "check_title": "Volume not encrypted with customer-managed key",
+      "cloud": "oci",
+      "service": "Block Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "volume:legacy-block",
+      "detail": "Block volume uses Oracle-managed encryption keys, not a customer-managed Vault key.",
+      "remediation": "Encrypt volumes with a Vault customer key where compliance requires it.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.volume.oc1..vollegacy",
+          "name": "legacy-block",
+          "type": "block",
+          "cmk": false,
+          "backup_count": 0,
+          "has_replica": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DB-001",
+      "check_title": "Autonomous Database uses a public endpoint",
+      "cloud": "oci",
+      "service": "Autonomous Database",
+      "category": "Database",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "adb:legacy-adb",
+      "detail": "Autonomous Database uses a public endpoint.",
+      "remediation": "Disable public access and use private endpoints / private DNS.",
+      "evidence": {
+        "config": {
+          "name": "legacy-adb",
+          "public_endpoint": true,
+          "cmk": false,
+          "data_guard": false,
+          "backup_retention_days": 3,
+          "auto_scaling": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DB-002",
+      "check_title": "ADB not using customer-managed encryption key",
+      "cloud": "oci",
+      "service": "Autonomous Database",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "adb:legacy-adb",
+      "detail": "ADB uses Oracle-managed keys (not customer-managed Vault keys).",
+      "remediation": "Associate a Vault master key with the database.",
+      "evidence": {
+        "config": {
+          "name": "legacy-adb",
+          "public_endpoint": true,
+          "cmk": false,
+          "data_guard": false,
+          "backup_retention_days": 3,
+          "auto_scaling": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-KMS-001",
+      "check_title": "Vault key rotation disabled",
+      "cloud": "oci",
+      "service": "Vault",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "key:ocid1.key.oc1..kmslegacy",
+      "detail": "Vault key rotation is disabled (or no rotation schedule).",
+      "remediation": "Enable key rotation (min 90 days, or use versioned keys).",
+      "evidence": {
+        "config": {
+          "key": "ocid1.key.oc1..kmslegacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": "CIS OCI 3.16"
+    },
+    {
+      "check_id": "OCI-CG-001",
+      "check_title": "Cloud Guard not enabled",
+      "cloud": "oci",
+      "service": "Cloud Guard",
+      "category": "Security Posture",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "cloud-guard",
+      "detail": "Cloud Guard is enabled with a target in the tenancy.",
+      "remediation": "Enable Cloud Guard with a tenancy-level target and responder rules.",
+      "evidence": {
+        "config": {
+          "enabled": true,
+          "detectors_enabled": 2
+        }
+      },
+      "cis": "CIS OCI 3.15"
+    },
+    {
+      "check_id": "OCI-NET-003",
+      "check_title": "VCN flow logging disabled",
+      "cloud": "oci",
+      "service": "VCN/Subnets",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "subnet:legacy-subnet",
+      "detail": "VCN flow logging is not enabled on this subnet.",
+      "remediation": "Enable flow logs on all subnets and ship to a log group.",
+      "evidence": {
+        "config": {
+          "name": "legacy-subnet",
+          "flow_log_enabled": false
+        }
+      },
+      "cis": "CIS OCI 3.14"
+    },
+    {
+      "check_id": "OCI-IAM-004",
+      "check_title": "No MFA enforcement policy",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "iam-policies",
+      "detail": "No IAM policy enforces MFA; console and API access can proceed without it.",
+      "remediation": "Add an identity policy enforcing MFA for all users/groups.",
+      "evidence": {
+        "config": {
+          "items": [
+            {
+              "name": "Network-Admins-Policy",
+              "statements": [
+                "Allow group Network-Admins to manage all-resources in tenancy"
+              ],
+              "broad_manage": true
+            },
+            {
+              "name": "App-Readonly-Policy",
+              "statements": [
+                "Allow group App-Readonly to read all-resources in compartment App"
+              ],
+              "broad_manage": false
+            }
+          ],
+          "total": 2
+        }
+      },
+      "cis": "CIS OCI 1.7"
+    },
+    {
+      "check_id": "OCI-IAM-005",
+      "check_title": "IAM policy scoped to tenancy root",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "policy:Network-Admins-Policy",
+      "detail": "Policy statement is scoped to the tenancy root compartment - applies to every compartment.",
+      "remediation": "Scope policies to compartments and specific resource-types.",
+      "evidence": {
+        "config": {
+          "name": "Network-Admins-Policy",
+          "statements": [
+            "Allow group Network-Admins to manage all-resources in tenancy"
+          ],
+          "broad_manage": true
+        }
+      },
+      "cis": "CIS OCI 1.2"
+    },
+    {
+      "check_id": "OCI-NET-007",
+      "check_title": "NSG not referenced by any resource",
+      "cloud": "oci",
+      "service": "VCN/NSG",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "nsg:nsg-legacy",
+      "detail": "NSG is not referenced by any resource; it provides no protection.",
+      "remediation": "Attach the NSG to the intended resources or delete it.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.nsg.oc1..nsglegacy",
+          "name": "nsg-legacy",
+          "open_ingress": true,
+          "referenced": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OS-004",
+      "check_title": "Bucket has active pre-authenticated requests",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "oci://demo-legacy-share",
+      "detail": "Bucket has 3 active pre-authenticated request(s) - time-bound URLs that bypass IAM.",
+      "remediation": "List and revoke unused PARs; prefer signed URLs issued on demand.",
+      "evidence": {
+        "par_count": 3,
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-004",
+      "check_title": "Internet gateway enabled",
+      "cloud": "oci",
+      "service": "VCN",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "igw:igw-prod",
+      "detail": "Enabled internet gateway provides direct public routing for the VCN.",
+      "remediation": "Disable internet gateways not required and route egress through NAT.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.internetgateway.oc1..igwprod",
+          "name": "igw-prod",
+          "enabled": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-004",
+      "check_title": "Internet gateway enabled",
+      "cloud": "oci",
+      "service": "VCN",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "igw:igw-legacy",
+      "detail": "Enabled internet gateway provides direct public routing for the VCN.",
+      "remediation": "Disable internet gateways not required and route egress through NAT.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.internetgateway.oc1..igwlegacy",
+          "name": "igw-legacy",
+          "enabled": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-005",
+      "check_title": "Load balancer without SSL listener",
+      "cloud": "oci",
+      "service": "Load Balancer",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "lb:lb-legacy",
+      "detail": "Load balancer has no listener with SSL/TLS; traffic is plaintext.",
+      "remediation": "Terminate TLS on all listeners and redirect HTTP to HTTPS.",
+      "evidence": {
+        "config": {
+          "name": "lb-legacy",
+          "public": true,
+          "ssl_listener": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-006",
+      "check_title": "Load balancer is public",
+      "cloud": "oci",
+      "service": "Load Balancer",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "lb:lb-web",
+      "detail": "Load balancer has a public IP; consider private LB behind a WAF/bastion.",
+      "remediation": "Use private load balancers behind WAF where possible.",
+      "evidence": {
+        "config": {
+          "name": "lb-web",
+          "public": true,
+          "ssl_listener": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-006",
+      "check_title": "Load balancer is public",
+      "cloud": "oci",
+      "service": "Load Balancer",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "lb:lb-legacy",
+      "detail": "Load balancer has a public IP; consider private LB behind a WAF/bastion.",
+      "remediation": "Use private load balancers behind WAF where possible.",
+      "evidence": {
+        "config": {
+          "name": "lb-legacy",
+          "public": true,
+          "ssl_listener": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-BV-002",
+      "check_title": "Volume has no backups",
+      "cloud": "oci",
+      "service": "Block Storage",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "volume:legacy-block",
+      "detail": "Volume has no backups configured; data loss cannot be recovered.",
+      "remediation": "Configure automatic or policy-based backups for all volumes.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.volume.oc1..vollegacy",
+          "name": "legacy-block",
+          "type": "block",
+          "cmk": false,
+          "backup_count": 0,
+          "has_replica": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-BST-001",
+      "check_title": "No Bastion service deployed",
+      "cloud": "oci",
+      "service": "Bastion",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "bastion",
+      "detail": "No Bastion service; SSH/RDP to compute is likely exposed via public ingress.",
+      "remediation": "Deploy the Bastion service and remove public management ingress.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DB-003",
+      "check_title": "Autonomous Data Guard disabled",
+      "cloud": "oci",
+      "service": "Autonomous Database",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "adb:legacy-adb",
+      "detail": "Autonomous Data Guard is not enabled; no cross-region failover for the database.",
+      "remediation": "Enable Autonomous Data Guard for production databases.",
+      "evidence": {
+        "config": {
+          "name": "legacy-adb",
+          "public_endpoint": true,
+          "cmk": false,
+          "data_guard": false,
+          "backup_retention_days": 3,
+          "auto_scaling": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-CG-002",
+      "check_title": "No Cloud Guard detector recipes active",
+      "cloud": "oci",
+      "service": "Cloud Guard",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "cloud-guard",
+      "detail": "Cloud Guard has 2 detector recipe(s) active.",
+      "remediation": "Enable managed detector recipes and attach them to targets.",
+      "evidence": {
+        "config": {
+          "enabled": true,
+          "detectors_enabled": 2
+        }
+      },
+      "cis": "CIS OCI 3.15"
+    },
+    {
+      "check_id": "OCI-FS-001",
+      "check_title": "File system not encrypted with customer-managed key",
+      "cloud": "oci",
+      "service": "File Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "fs:fs-legacy",
+      "detail": "File system uses Oracle-managed keys, not a Vault customer key.",
+      "remediation": "Associate a Vault master key with the file system.",
+      "evidence": {
+        "config": {
+          "name": "fs-legacy",
+          "cmk": false,
+          "snapshots": 0
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-FS-002",
+      "check_title": "File system has no snapshots",
+      "cloud": "oci",
+      "service": "File Storage",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "fs:fs-legacy",
+      "detail": "File system has no snapshots; data cannot be rolled back.",
+      "remediation": "Enable automatic snapshots on file systems.",
+      "evidence": {
+        "config": {
+          "name": "fs-legacy",
+          "cmk": false,
+          "snapshots": 0
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OSMS-001",
+      "check_title": "OS Management Service not managing instances",
+      "cloud": "oci",
+      "service": "OS Management",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "osms",
+      "detail": "No instances are managed by OS Management Service; patch and vulnerability compliance is not tracked.",
+      "remediation": "Onboard instances to OS Management Service.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OS-005",
+      "check_title": "Bucket lifecycle policy missing",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "oci://demo-legacy-share",
+      "detail": "Bucket has no lifecycle policy; stale objects accumulate.",
+      "remediation": "Define a lifecycle policy to expire/archive objects.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-BV-003",
+      "check_title": "Volume has no cross-region replica",
+      "cloud": "oci",
+      "service": "Block Storage",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "volume:legacy-block",
+      "detail": "Volume has no cross-region replica; data is lost if the region fails.",
+      "remediation": "Create cross-region volume replicas for critical volumes.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.volume.oc1..vollegacy",
+          "name": "legacy-block",
+          "type": "block",
+          "cmk": false,
+          "backup_count": 0,
+          "has_replica": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-010",
+      "check_title": "Default route targets internet gateway",
+      "cloud": "oci",
+      "service": "VCN/Route Tables",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "routetable:rt-legacy",
+      "detail": "Route table sends 0.0.0.0/0 to an internet gateway; workloads get direct public egress.",
+      "remediation": "Route default traffic via NAT gateway and restrict IGW routes.",
+      "evidence": {
+        "config": {
+          "name": "rt-legacy",
+          "public_default_route": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-NET-011",
+      "check_title": "No NAT gateway",
+      "cloud": "oci",
+      "service": "VCN/NAT",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "nat-gateway",
+      "detail": "A NAT gateway provides controlled egress.",
+      "remediation": "Deploy a NAT gateway and route egress through it.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OSMS-002",
+      "check_title": "No OSMS managed instance groups",
+      "cloud": "oci",
+      "service": "OS Management",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "osms",
+      "detail": "No OSMS managed instance groups; instances have no scheduled patch baseline.",
+      "remediation": "Create OSMS managed instance groups and attach patch baselines.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "OCI-AUDIT-001",
+      "check_title": "Audit log retention below 90 days",
+      "cloud": "oci",
+      "service": "Audit",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "audit",
+      "detail": "Audit log retention is 60 days (< 90); forensic history is lost too early.",
+      "remediation": "Raise audit retention period to >= 90 days.",
+      "evidence": {
+        "config": {
+          "retention_days": 60
+        }
+      },
+      "cis": "CIS OCI 3.1"
+    },
+    {
+      "check_id": "OCI-DB-004",
+      "check_title": "ADB backup retention below 7 days",
+      "cloud": "oci",
+      "service": "Autonomous Database",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "adb:legacy-adb",
+      "detail": "Backup retention is 3 days (< 7); recovery options are limited.",
+      "remediation": "Set backup retention to at least 7 days.",
+      "evidence": {
+        "config": {
+          "name": "legacy-adb",
+          "public_endpoint": true,
+          "cmk": false,
+          "data_guard": false,
+          "backup_retention_days": 3,
+          "auto_scaling": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-OS-006",
+      "check_title": "Pre-authenticated request without expiration",
+      "cloud": "oci",
+      "service": "Object Storage",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "bucket:demo-legacy-share",
+      "detail": "2 pre-authenticated request(s) have no expiration; temporary access never expires.",
+      "remediation": "Set an expiration on every pre-authenticated request.",
+      "evidence": {
+        "config": {
+          "name": "demo-legacy-share",
+          "public_type": "ObjectRead",
+          "versioning": false,
+          "cmk": false,
+          "par_count": 3,
+          "par_no_expiry": 2,
+          "lifecycle_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-IAM-006",
+      "check_title": "OCI API key older than 90 days",
+      "cloud": "oci",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "user:demo.svc",
+      "detail": "API key is 240 days old (> 90); rotate to limit leaked-key blast radius.",
+      "remediation": "Rotate user API keys every 90 days.",
+      "evidence": {
+        "config": {
+          "name": "demo.svc",
+          "mfa_enabled": false,
+          "has_console_password": false,
+          "api_keys": 2,
+          "max_api_key_age": 240
+        }
+      },
+      "cis": "CIS OCI 1.8"
+    },
+    {
+      "check_id": "OCI-NOSQL-001",
+      "check_title": "NoSQL table without throughput limits",
+      "cloud": "oci",
+      "service": "NoSQL Database",
+      "category": "Cost & Resilience",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "nosql:legacy-orders",
+      "detail": "Table has no throughput limits; a traffic spike can drive unbounded cost.",
+      "remediation": "Define max read/write throughput on every NoSQL table.",
+      "evidence": {
+        "config": {
+          "name": "legacy-orders",
+          "has_limits": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DNS-001",
+      "check_title": "DNS zone without DNSSEC",
+      "cloud": "oci",
+      "service": "DNS",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "dns",
+      "detail": "2/3 zone(s) lack DNSSEC: legacy.example.com, internal.example.com.",
+      "remediation": "Enable DNSSEC on all public DNS zones.",
+      "evidence": {
+        "config": {
+          "total": 3,
+          "dnssec_off": [
+            "legacy.example.com",
+            "internal.example.com"
+          ]
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DB-005",
+      "check_title": "DB system without backups",
+      "cloud": "oci",
+      "service": "Database",
+      "category": "Backup & Recovery",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "database",
+      "detail": "DB systems exist but no backups are configured; data is unprotected against loss.",
+      "remediation": "Configure automated backups for all DB systems.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "OCI-DB-006",
+      "check_title": "ADB auto-scaling disabled",
+      "cloud": "oci",
+      "service": "Autonomous Database",
+      "category": "Resilience",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "adb:legacy-adb",
+      "detail": "Auto-scaling is disabled; the database cannot grow under load.",
+      "remediation": "Enable auto-scaling on production ADBs.",
+      "evidence": {
+        "config": {
+          "name": "legacy-adb",
+          "public_endpoint": true,
+          "cmk": false,
+          "data_guard": false,
+          "backup_retention_days": 3,
+          "auto_scaling": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-AG-001",
+      "check_title": "API Gateway without WAF policy",
+      "cloud": "oci",
+      "service": "API Gateway",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "apigateway:gw-legacy",
+      "detail": "API Gateway has no OCI WAF policy attached; API traffic is not filtered for common web attacks.",
+      "remediation": "Attach an OCI WAF policy (managed protection rules) to the API Gateway.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.internetgateway.oc1..igwlegacy",
+          "name": "igw-legacy",
+          "enabled": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "OCI-AG-002",
+      "check_title": "Public API Gateway without enforced TLS",
+      "cloud": "oci",
+      "service": "API Gateway",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "apigateway:gw-legacy",
+      "detail": "Public API Gateway endpoint does not enforce a TLS/HTTPS certificate; clients can fall back to plaintext.",
+      "remediation": "Attach a TLS certificate to the gateway's public endpoint and redirect HTTP to HTTPS.",
+      "evidence": {
+        "config": {
+          "id": "ocid1.internetgateway.oc1..igwlegacy",
+          "name": "igw-legacy",
+          "enabled": true
+        }
+      },
+      "cis": null
+    }
+  ]
+}

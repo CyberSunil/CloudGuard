@@ -1,0 +1,46 @@
+# ============================================================================
+# CloudGuard comparison baseline - DRAFT TEMPLATE
+# ----------------------------------------------------------------------------
+# This file becomes your "previous report" so CloudGuard can classify each
+# issue as FIXED / STILL_REPRODUCIBLE / REGRESSED / NEW on the next scan.
+#
+# HOW TO FILL IT
+#   A) Already using CloudGuard?  NO FORMAT CHANGE NEEDED.
+#      Re-export a previous run's findings_<cloud>.csv (same columns) or run:
+#        python3 run.py save-baseline --scan reports/scan_<older>/
+#      and pass that file straight to the next scan.
+#
+#   B) Manual scan or another tool (ScoutSuite, Prowler, etc.)?
+#      1. Copy the example rows below and replace them with your findings.
+#      2. Every row needs a check_id + resource. Find the right CloudGuard
+#         check_id for your misconfiguration with:
+#            python3 run.py checks --search "<your issue text>"
+#         (e.g. 'public bucket' or 'root mfa'), or browse:
+#            python3 run.py checks --cloud <aws|azure|gcp|oci>
+#      3. cloud is one of: aws | azure | gcp | oci
+#      4. status: FAIL / FAILED / OPEN / NON_COMPLIANT  = issue present
+#                 PASS / OK                            = compliant
+#      5. Columns may use aliases: check/rule_id for check_id,
+#         asset/resource_name for resource, result/outcome for status,
+#         provider for cloud.
+#
+# THEN RUN
+#   python3 run.py scan --cloud <provider> --baseline comparison_template.csv ...
+#   or (demo): python3 run.py demo --baseline comparison_template.csv
+#   The Comparison section then appears as the FIRST section of the dashboard.
+# ============================================================================
+cloud,check_id,resource,status,severity,title,service,category
+# --- example: manual or ScoutSuite/Prowler findings (replace with yours) ---
+aws,AWS-IAM-001,root-account,FAIL,CRITICAL,Root account has active access keys,IAM,Identity & Access
+aws,AWS-S3-001,s3://legacy-public,FAIL,CRITICAL,S3 bucket publicly accessible,S3,Storage & Data Protection
+aws,AWS-EC2-001,sg:sg-web,FAIL,CRITICAL,Security group exposes management ports to the internet,EC2/Network,Network Security
+azure,AZ-NSG-001,nsg:nsg-web,FAIL,CRITICAL,NSG exposes management ports to any source,Network,Network Security
+azure,AZ-KV-001,vault:prod-kv,FAIL,HIGH,Key Vault soft delete disabled,Key Vault,Key Management
+azure,AZ-STR-002,storage:legacystore,FAIL,HIGH,Storage account minimum TLS below 1.2,Storage,Network Security
+gcp,GCP-ST-001,gs://demo-legacy-public,FAIL,CRITICAL,Bucket publicly readable,Cloud Storage,Storage & Data Protection
+gcp,GCP-IAM-002,user:admin@example.com,FAIL,CRITICAL,Primitive role assigned to a human user,IAM,Identity & Access
+oci,OCI-IAM-003,policy:Network-Admins-Policy,FAIL,CRITICAL,IAM policy grants broad manage all-resources,IAM,Identity & Access
+oci,OCI-OS-001,oci://demo-legacy-share,FAIL,CRITICAL,Bucket publicly readable,Object Storage,Storage & Data Protection
+# --- example: issues already fixed at the previous scan (status PASS) ---
+aws,AWS-IAM-004,user:bob,PASS,HIGH,Console users without MFA,IAM,Identity & Access
+gcp,GCP-LOG-001,project-audit-config,PASS,HIGH,Admin activity audit logging disabled,Cloud Logging,Logging & Monitoring

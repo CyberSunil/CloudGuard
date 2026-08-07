@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+venv/
+.venv/
+
+# Reports / generated artifacts
+reports/
+comparison_scan_diff/
+*.log
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Reference images (not part of the tool)
+*.png
+!Cloud.png

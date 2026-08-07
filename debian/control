@@ -1,0 +1,26 @@
+Source: cloudguard
+Section: utils
+Priority: optional
+Maintainer: CyberSunil <you@example.com>
+Build-Depends: debhelper (>= 13), dh-virtualenv (>= 2.0), python3-dev, python3-venv
+Standards-Version: 4.6.2
+Homepage: https://example.com/cloudguard
+Vcs-Git: https://example.com/cloudguard.git
+
+Package: cloudguard
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Multi-cloud configuration review, comparison and dashboarding
+ CloudGuard scans AWS, Azure, GCP and OCI environments read-only against a
+ CIS-focused catalog of 320+ hand-written checks, and produces a fully
+ offline HTML dashboard with:
+   - risk scoring and per-severity breakdown
+   - CIS Benchmark score + SOC 2 / PCI DSS / NIST 800-53 / HIPAA control
+     mappings on every finding
+   - baseline comparison / review / drift workflow (previous report vs now)
+   - false-positive exclusion in PDF / Excel / CSV exports
+   - least-privilege access templates per provider
+ .
+ The .deb bundles its own Python virtualenv (built with dh-virtualenv), so
+ every cloud SDK ships inside the package and the installed tool works
+ offline with no pip installs.

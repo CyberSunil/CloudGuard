@@ -1,0 +1,30 @@
+# CloudSecReview - runtime dependencies for REAL scans
+# Demo mode (python3 run.py demo) requires NO third-party packages.
+
+# --- AWS ---
+boto3>=1.34.0
+
+# --- Azure ---
+azure-identity>=1.16.0
+azure-mgmt-resource>=23.1.0
+azure-mgmt-storage>=21.1.0
+azure-mgmt-network>=26.0.0
+azure-mgmt-keyvault>=10.3.0
+azure-mgmt-sql>=4.0.0b16
+azure-mgmt-compute>=32.0.0
+azure-mgmt-monitor>=6.0.2
+azure-mgmt-containerregistry>=10.3.0
+azure-mgmt-web>=7.2.0
+azure-mgmt-cosmosdb>=9.5.0
+
+# --- GCP ---
+google-cloud-storage>=2.14.0
+google-cloud-resource-manager>=1.12.0
+google-cloud-compute>=1.19.0
+google-cloud-sql>=0.11.0
+google-cloud-kms>=2.21.0
+google-cloud-logging>=3.10.0
+google-cloud-container>=2.42.0
+
+# --- OCI ---
+oci>=2.126.0

@@ -1,0 +1,2963 @@
+{
+  "cloud": "aws",
+  "account_id": "111122223333",
+  "account_name": "demo-prod-aws",
+  "timestamp": "2026-08-07T11:57:20Z",
+  "principal": "arn:aws:iam::111122223333:user/security-reviewer",
+  "auth_mode": "demo",
+  "regions": [],
+  "checks_total": 120,
+  "checks_executed": 120,
+  "risk_score": 48.0,
+  "summary": {
+    "by_status": {
+      "PASS": 12,
+      "FAIL": 120
+    },
+    "failed_by_severity": {
+      "MEDIUM": 61,
+      "HIGH": 30,
+      "LOW": 21,
+      "CRITICAL": 8
+    },
+    "failed_by_service": {
+      "IAM": 3,
+      "S3": 12,
+      "EC2/Network": 8,
+      "RDS": 9,
+      "SNS": 2,
+      "CloudTrail": 3,
+      "Config": 1,
+      "KMS": 1,
+      "ECR": 3,
+      "Lambda": 4,
+      "VPC": 4,
+      "EC2": 8,
+      "CloudWatch": 9,
+      "Secrets Manager": 2,
+      "ACM": 2,
+      "SQS": 3,
+      "DynamoDB": 3,
+      "Redshift": 2,
+      "EFS": 3,
+      "ElastiCache": 2,
+      "ELB": 7,
+      "EKS": 2,
+      "API Gateway": 1,
+      "Route 53": 2,
+      "CloudFront": 8,
+      "CloudWatch Logs": 4,
+      "AWS Backup": 1,
+      "Backup": 1,
+      "ECS": 3,
+      "IoT": 2,
+      "SES": 1,
+      "GuardDuty": 1,
+      "SageMaker": 3
+    },
+    "failed_by_category": {
+      "Identity & Access": 5,
+      "Storage & Data Protection": 4,
+      "Logging & Monitoring": 30,
+      "Network Security": 24,
+      "Data Protection": 24,
+      "Compute": 4,
+      "Database": 2,
+      "Backup & Recovery": 9,
+      "Key Management": 3,
+      "Container Security": 2,
+      "Kubernetes": 1,
+      "Security Posture": 10,
+      "Resilience": 1,
+      "Email Security": 1
+    }
+  },
+  "errors": [],
+  "snapshot_summary": {
+    "account_id": 1,
+    "account_name": 1,
+    "principal": 1,
+    "iam": 5,
+    "s3": 4,
+    "ec2": 6,
+    "rds": 2,
+    "sns": 1,
+    "trail": 6,
+    "config": 2,
+    "kms": 2,
+    "ecr": 2,
+    "lambda": 2,
+    "vpcs": 2,
+    "nacls": 2,
+    "guardduty": 1,
+    "secrets": 2,
+    "sqs": 2,
+    "dynamodb": 2,
+    "redshift": 2,
+    "efs": 2,
+    "elasticache": 2,
+    "elb": 3,
+    "acm": 2,
+    "eks": 2,
+    "apigw": 2,
+    "r53": 3,
+    "cw": 2,
+    "cloudfront": 2,
+    "loggroups": 3,
+    "snapshots": 2,
+    "backup": 2,
+    "rds_public_snapshots": 1,
+    "elb_classic": 1,
+    "s3_block_public": 1,
+    "ecs": 2,
+    "iot": 2,
+    "ses": 2,
+    "sagemaker": 2
+  },
+  "extra": {
+    "frameworks": [],
+    "privilege_check": {
+      "level": "readonly",
+      "warnings": []
+    }
+  },
+  "findings": [
+    {
+      "check_id": "AWS-IAM-001",
+      "check_title": "Root account has active access keys",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "root-account",
+      "detail": "No root access keys found.",
+      "remediation": "Delete the root access keys, enable SCPs/Organizations and use IAM roles with temporary credentials.",
+      "evidence": {
+        "config": {
+          "access_keys_active": false,
+          "mfa_enabled": true,
+          "access_key_count": 0
+        }
+      },
+      "cis": "CIS AWS 1.3"
+    },
+    {
+      "check_id": "AWS-IAM-002",
+      "check_title": "Root account does not have MFA enabled",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "root-account",
+      "detail": "Root MFA enabled.",
+      "remediation": "Enable a hardware MFA device on the root account immediately.",
+      "evidence": {
+        "config": {
+          "access_keys_active": false,
+          "mfa_enabled": true,
+          "access_key_count": 0
+        }
+      },
+      "cis": "CIS AWS 1.4 / 1.5"
+    },
+    {
+      "check_id": "AWS-IAM-003",
+      "check_title": "IAM user access keys older than 90 days",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "user:ci-bot/key:AKIASTALE98765",
+      "detail": "Access key AKIASTALE98765 is 210 days old (limit 90).",
+      "remediation": "Rotate keys and prefer roles/SSO for humans and short-lived credentials for workloads.",
+      "evidence": {
+        "age_days": 210,
+        "config": {
+          "id": "AKIASTALE98765",
+          "age_days": 210,
+          "active": true
+        }
+      },
+      "cis": "CIS AWS 1.13"
+    },
+    {
+      "check_id": "AWS-IAM-004",
+      "check_title": "Console users without MFA",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "user:bob",
+      "detail": "Console user does not have MFA enabled.",
+      "remediation": "Require MFA for all console users (e.g. via an IAM policy denying console access without MFA).",
+      "evidence": {
+        "config": {
+          "name": "bob",
+          "has_console_password": true,
+          "mfa_enabled": false,
+          "keys": []
+        }
+      },
+      "cis": "CIS AWS 1.9"
+    },
+    {
+      "check_id": "AWS-IAM-005",
+      "check_title": "IAM policies granting full administrative privileges",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "iam-policies",
+      "detail": "No policies grant blanket administrative access.",
+      "remediation": "Replace full-admin policies with scoped, least-privilege policies; audit usage with IAM Access Analyzer.",
+      "evidence": {},
+      "cis": "CIS AWS 1.15"
+    },
+    {
+      "check_id": "AWS-IAM-006",
+      "check_title": "IAM password policy is weak or missing",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "account-password-policy",
+      "detail": "Password policy meets minimum hardening requirements.",
+      "remediation": "Configure a compliant password policy in IAM.",
+      "evidence": {
+        "config": {
+          "minimum_password_length": 16,
+          "require_symbols": true,
+          "require_numbers": true,
+          "require_uppercase_characters": true,
+          "require_lowercase_characters": true,
+          "max_password_age": 90
+        }
+      },
+      "cis": "CIS AWS 1.7 / 1.8"
+    },
+    {
+      "check_id": "AWS-S3-001",
+      "check_title": "S3 bucket publicly accessible",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "s3-buckets",
+      "detail": "No buckets found publicly accessible.",
+      "remediation": "Block public access at account level (BlockPublicAcl / BlockPublicPolicy) and keep ACLs off.",
+      "evidence": {
+        "config": {
+          "items": [
+            {
+              "name": "prod-data",
+              "public": false,
+              "public_acl": null,
+              "encryption": true,
+              "versioning": true,
+              "logging": true,
+              "lifecycle": true,
+              "mfa_delete": true,
+              "object_lock": true
+            },
+            {
+              "name": "legacy-public",
+              "public": false,
+              "public_acl": null,
+              "encryption": true,
+              "versioning": true,
+              "logging": false,
+              "lifecycle": false,
+              "mfa_delete": false,
+              "object_lock": false
+            },
+            {
+              "name": "backups",
+              "public": false,
+              "public_acl": null,
+              "encryption": false,
+              "versioning": true,
+              "logging": true,
+              "lifecycle": true,
+              "mfa_delete": false,
+              "object_lock": false
+            },
+            {
+              "name": "archive",
+              "public": false,
+              "public_acl": null,
+              "encryption": true,
+              "versioning": false,
+              "logging": true,
+              "lifecycle": false,
+              "mfa_delete": false,
+              "object_lock": false
+            }
+          ],
+          "total": 4
+        }
+      },
+      "cis": "CIS AWS 2.1.4"
+    },
+    {
+      "check_id": "AWS-S3-002",
+      "check_title": "S3 bucket default encryption disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Storage & Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "s3://backups",
+      "detail": "Default encryption (SSE) is not enabled.",
+      "remediation": "Enable SSE-S3 or SSE-KMS as the bucket default.",
+      "evidence": {
+        "config": {
+          "name": "backups",
+          "public": false,
+          "public_acl": null,
+          "encryption": false,
+          "versioning": true,
+          "logging": true,
+          "lifecycle": true,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": "CIS AWS 2.1.3"
+    },
+    {
+      "check_id": "AWS-S3-003",
+      "check_title": "S3 bucket versioning disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Storage & Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "s3://archive",
+      "detail": "Versioning is disabled; deleted/overwritten objects cannot be recovered.",
+      "remediation": "Enable versioning; pair with lifecycle rules for cost control.",
+      "evidence": {
+        "config": {
+          "name": "archive",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": false,
+          "logging": true,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": "CIS AWS 2.1.2"
+    },
+    {
+      "check_id": "AWS-S3-004",
+      "check_title": "S3 server access logging disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "s3://legacy-public",
+      "detail": "Server access logging is disabled; no audit trail of object-level access.",
+      "remediation": "Enable server access logging to a dedicated logging bucket.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-001",
+      "check_title": "Security group exposes management ports to the internet",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "sg:sg-web",
+      "detail": "Security group exposes ports [22] to 0.0.0.0/0.",
+      "remediation": "Restrict ingress to known CIDRs/VPC endpoints; use AWS Systems Manager Session Manager instead of SSH.",
+      "evidence": {
+        "open_ports": [
+          22
+        ],
+        "config": {
+          "id": "sg-01",
+          "name": "sg-web",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "ports": [
+                443,
+                443
+              ],
+              "cidr": [
+                "0.0.0.0/0"
+              ]
+            },
+            {
+              "proto": "tcp",
+              "ports": [
+                22,
+                22
+              ],
+              "cidr": [
+                "0.0.0.0/0"
+              ]
+            }
+          ]
+        }
+      },
+      "cis": "CIS AWS 5.3"
+    },
+    {
+      "check_id": "AWS-EC2-001",
+      "check_title": "Security group exposes management ports to the internet",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "sg:sg-db",
+      "detail": "Security group exposes ports [3306] to 0.0.0.0/0.",
+      "remediation": "Restrict ingress to known CIDRs/VPC endpoints; use AWS Systems Manager Session Manager instead of SSH.",
+      "evidence": {
+        "open_ports": [
+          3306
+        ],
+        "config": {
+          "id": "sg-03",
+          "name": "sg-db",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "ports": [
+                3306,
+                3306
+              ],
+              "cidr": [
+                "0.0.0.0/0"
+              ]
+            }
+          ]
+        }
+      },
+      "cis": "CIS AWS 5.3"
+    },
+    {
+      "check_id": "AWS-EC2-002",
+      "check_title": "EBS volume not encrypted at rest",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vol:02",
+      "detail": "EBS volume is not encrypted at rest.",
+      "remediation": "Enable EBS encryption by default at the account level.",
+      "evidence": {
+        "config": {
+          "id": "sg-02",
+          "name": "sg-app",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "ports": [
+                443,
+                443
+              ],
+              "cidr": [
+                "10.0.0.0/8"
+              ]
+            }
+          ]
+        }
+      },
+      "cis": "CIS AWS 5.1.1"
+    },
+    {
+      "check_id": "AWS-EC2-003",
+      "check_title": "Public AMI shared with all AWS accounts",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Compute",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "ami:02",
+      "detail": "AMI is public; any AWS account can launch instances from it.",
+      "remediation": "Make AMIs private; share explicitly with trusted accounts.",
+      "evidence": {
+        "config": {
+          "id": "sg-02",
+          "name": "sg-app",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "ports": [
+                443,
+                443
+              ],
+              "cidr": [
+                "10.0.0.0/8"
+              ]
+            }
+          ]
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-004",
+      "check_title": "Public instance attached to open security group",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "i-01",
+      "detail": "Instance has a public IP and is attached to a security group exposing management ports.",
+      "remediation": "Move instances into private subnets behind a bastion/ALB; scope security groups to the minimum required.",
+      "evidence": {
+        "config": {
+          "id": "01",
+          "encrypted": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-001",
+      "check_title": "RDS instance is publicly accessible",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Database",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "rds:prod-db",
+      "detail": "RDS instance is publicly accessible.",
+      "remediation": "Disable public accessibility and place RDS in private subnets.",
+      "evidence": {
+        "config": {
+          "id": "prod-db",
+          "publicly_accessible": true,
+          "storage_encrypted": true,
+          "backup_retention_days": 14,
+          "deletion_protection": true,
+          "multi_az": true,
+          "minor_version": "15.7",
+          "log_exports": true,
+          "auto_minor_upgrade": true,
+          "enhanced_monitoring": true
+        }
+      },
+      "cis": "CIS AWS 2.2.3"
+    },
+    {
+      "check_id": "AWS-RDS-002",
+      "check_title": "RDS storage encryption disabled",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "RDS storage encryption is disabled.",
+      "remediation": "Enable RDS encryption (may require re-creation).",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-003",
+      "check_title": "RDS backup retention below 7 days",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "Backup retention is 3 days (recommended >= 7).",
+      "remediation": "Set automated backup retention to at least 7 days.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SNS-001",
+      "check_title": "SNS topic publicly accessible",
+      "cloud": "aws",
+      "service": "SNS",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "arn:aws:sns:us-east-1:111122223333:alerts",
+      "detail": "SNS topic policy allows public subscription/publish.",
+      "remediation": "Restrict topic policies to trusted principals and actions.",
+      "evidence": {
+        "config": {
+          "topic_arn": "arn:aws:sns:us-east-1:111122223333:alerts",
+          "public": true,
+          "kms_encrypted": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CT-001",
+      "check_title": "CloudTrail disabled or misconfigured",
+      "cloud": "aws",
+      "service": "CloudTrail",
+      "category": "Logging & Monitoring",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "cloudtrail",
+      "detail": "CloudTrail is configured but: log file integrity validation disabled.",
+      "remediation": "Enable a multi-region trail with log file validation and an S3/KMS backed log store.",
+      "evidence": {
+        "config": {
+          "exists": true,
+          "multi_region": true,
+          "log_file_validation": false,
+          "logging": true,
+          "s3_bucket_encrypted": false,
+          "kms_key_id": false
+        }
+      },
+      "cis": "CIS AWS 3.1"
+    },
+    {
+      "check_id": "AWS-CFG-001",
+      "check_title": "AWS Config recorder not running",
+      "cloud": "aws",
+      "service": "Config",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aws-config",
+      "detail": "AWS Config recorder is not running.",
+      "remediation": "Enable the Config recorder and delivery channel.",
+      "evidence": {
+        "config": {
+          "recorder": false,
+          "delivering": false
+        }
+      },
+      "cis": "CIS AWS 3.3"
+    },
+    {
+      "check_id": "AWS-KMS-001",
+      "check_title": "KMS key rotation disabled",
+      "cloud": "aws",
+      "service": "KMS",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "kms:legacy",
+      "detail": "KMS key rotation is disabled.",
+      "remediation": "Enable automatic yearly rotation for symmetric customer keys.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": "CIS AWS 3.6"
+    },
+    {
+      "check_id": "AWS-ECR-001",
+      "check_title": "ECR repository publicly accessible",
+      "cloud": "aws",
+      "service": "ECR",
+      "category": "Container Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "ecr:legacy",
+      "detail": "ECR repository policy allows public pulls.",
+      "remediation": "Set repository policy to deny public access and enforce private-only pulls.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-LMB-001",
+      "check_title": "Lambda function on deprecated runtime",
+      "cloud": "aws",
+      "service": "Lambda",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "lambda:old-etl",
+      "detail": "Lambda uses end-of-life runtime python3.7.",
+      "remediation": "Migrate to a supported runtime (e.g. python3.12, nodejs20.x).",
+      "evidence": {
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-VPC-001",
+      "check_title": "Default VPC in use",
+      "cloud": "aws",
+      "service": "VPC",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vpc:vpc-default",
+      "detail": "The default VPC exists and is in use; it ships with permissive routing and no guard rails.",
+      "remediation": "Delete the default VPC (or stop using it) and deploy workloads in purpose-built VPCs.",
+      "evidence": {
+        "config": {
+          "id": "vpc-default",
+          "is_default": true,
+          "flow_logs": false,
+          "has_igw": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-VPC-002",
+      "check_title": "VPC flow logging not enabled",
+      "cloud": "aws",
+      "service": "VPC",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vpc:vpc-default",
+      "detail": "VPC flow logging is not enabled; network traffic cannot be audited or forensically reconstructed.",
+      "remediation": "Enable flow logs on every VPC to a centralized log destination.",
+      "evidence": {
+        "config": {
+          "id": "vpc-default",
+          "is_default": true,
+          "flow_logs": false,
+          "has_igw": true
+        }
+      },
+      "cis": "CIS AWS 3.7"
+    },
+    {
+      "check_id": "AWS-VPC-003",
+      "check_title": "NACL allows all inbound traffic",
+      "cloud": "aws",
+      "service": "VPC",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "nacl:acl-legacy",
+      "detail": "NACL contains an inbound allow-all rule from 0.0.0.0/0, bypassing subnet-level filtering.",
+      "remediation": "Replace allow-all NACL entries with explicit allow rules for required traffic.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-VPC-004",
+      "check_title": "Default security group allows open ingress",
+      "cloud": "aws",
+      "service": "VPC",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "default-security-group",
+      "detail": "The default security group allows ingress from 0.0.0.0/0; default groups should have no inbound rules.",
+      "remediation": "Remove all inbound rules from default security groups.",
+      "evidence": {},
+      "cis": "CIS AWS 5.5"
+    },
+    {
+      "check_id": "AWS-EC2-005",
+      "check_title": "EBS encryption by default disabled",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "account-ebs",
+      "detail": "EBS encryption by default is not enabled; new volumes are created unencrypted unless specified.",
+      "remediation": "Enable EBS encryption by default and use a CMK where required.",
+      "evidence": {},
+      "cis": "CIS AWS 5.1.1"
+    },
+    {
+      "check_id": "AWS-EC2-006",
+      "check_title": "EC2 instance does not require IMDSv2",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "i-01",
+      "detail": "Instance does not require IMDSv2 (session-based tokens); the SSRF risk profile is higher.",
+      "remediation": "Enforce IMDSv2 (HttpTokens=required) on instances and AMIs.",
+      "evidence": {
+        "config": {
+          "id": "01",
+          "encrypted": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-006",
+      "check_title": "EC2 instance does not require IMDSv2",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Compute",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "i-03",
+      "detail": "Instance does not require IMDSv2 (session-based tokens); the SSRF risk profile is higher.",
+      "remediation": "Enforce IMDSv2 (HttpTokens=required) on instances and AMIs.",
+      "evidence": {
+        "config": {
+          "id": "03",
+          "public_ip": "54.7.8.9",
+          "security_groups": [],
+          "imdsv2": false,
+          "termination_protection": false,
+          "monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-007",
+      "check_title": "EC2 termination protection disabled",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "i-01",
+      "detail": "Instance termination protection is disabled; a stray terminate API call destroys it.",
+      "remediation": "Enable disableApiTermination on production instances.",
+      "evidence": {
+        "config": {
+          "id": "01",
+          "encrypted": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-007",
+      "check_title": "EC2 termination protection disabled",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "i-03",
+      "detail": "Instance termination protection is disabled; a stray terminate API call destroys it.",
+      "remediation": "Enable disableApiTermination on production instances.",
+      "evidence": {
+        "config": {
+          "id": "03",
+          "public_ip": "54.7.8.9",
+          "security_groups": [],
+          "imdsv2": false,
+          "termination_protection": false,
+          "monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-008",
+      "check_title": "EC2 detailed monitoring disabled",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "i-01",
+      "detail": "Detailed CloudWatch monitoring is disabled on the instance.",
+      "remediation": "Enable detailed monitoring on critical instances.",
+      "evidence": {
+        "config": {
+          "id": "01",
+          "encrypted": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-008",
+      "check_title": "EC2 detailed monitoring disabled",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "i-03",
+      "detail": "Detailed CloudWatch monitoring is disabled on the instance.",
+      "remediation": "Enable detailed monitoring on critical instances.",
+      "evidence": {
+        "config": {
+          "id": "03",
+          "public_ip": "54.7.8.9",
+          "security_groups": [],
+          "imdsv2": false,
+          "termination_protection": false,
+          "monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CW-003",
+      "check_title": "No alarm for root account usage",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "cloudwatch-alarms",
+      "detail": "No alarm for root account usage - alarm present.",
+      "remediation": "Create a metric filter + alarm for RootAccountUsageEvent.",
+      "evidence": {},
+      "cis": "CIS AWS 4.3"
+    },
+    {
+      "check_id": "AWS-CW-004",
+      "check_title": "No alarm for IAM policy changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "cloudwatch-alarms",
+      "detail": "No alarm for IAM policy changes - alarm present.",
+      "remediation": "Create a metric filter + alarm for IAM PolicyEvent changes.",
+      "evidence": {},
+      "cis": "CIS AWS 4.4"
+    },
+    {
+      "check_id": "AWS-CW-005",
+      "check_title": "No alarm for CloudTrail changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Disabling or misconfiguring CloudTrail removes the audit trail - changes must alert.",
+      "remediation": "Create a metric filter + alarm for CloudTrail events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.5"
+    },
+    {
+      "check_id": "AWS-CW-006",
+      "check_title": "No alarm for console sign-in without MFA",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Sign-ins without MFA indicate a bypass or a compromised password.",
+      "remediation": "Create a metric filter + alarm for ConsoleLogin without MFA.",
+      "evidence": {},
+      "cis": "CIS AWS 4.2"
+    },
+    {
+      "check_id": "AWS-CW-007",
+      "check_title": "No alarm for NACL changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "NACL changes alter subnet traffic filtering; unexpected changes must alert.",
+      "remediation": "Create a metric filter + alarm for NetworkAcl events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.11"
+    },
+    {
+      "check_id": "AWS-CW-008",
+      "check_title": "No alarm for security group changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Security group changes can open ports to the internet.",
+      "remediation": "Create a metric filter + alarm for SecurityGroup events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.10"
+    },
+    {
+      "check_id": "AWS-CW-009",
+      "check_title": "No alarm for S3 bucket policy changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Bucket policy changes can make data public.",
+      "remediation": "Create a metric filter + alarm for PutBucketPolicy events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.8"
+    },
+    {
+      "check_id": "AWS-CW-010",
+      "check_title": "No alarm for KMS key changes",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "KMS key deletion/disabling destroys or locks data.",
+      "remediation": "Create a metric filter + alarm for KMS key events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.7"
+    },
+    {
+      "check_id": "AWS-CW-001",
+      "check_title": "No alarm for unauthorized API calls",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Repeated denied API calls are a classic attack signal.",
+      "remediation": "Create a metric filter + alarm for UnauthorizedOperation events.",
+      "evidence": {},
+      "cis": "CIS AWS 4.1"
+    },
+    {
+      "check_id": "AWS-CW-002",
+      "check_title": "No alarm for failed console sign-ins",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudwatch-alarms",
+      "detail": "Brute-force and credential-stuffing attempts produce failed sign-ins.",
+      "remediation": "Create a metric filter + alarm for ConsoleLogin failures.",
+      "evidence": {},
+      "cis": "CIS AWS 4.6"
+    },
+    {
+      "check_id": "AWS-GD-001",
+      "check_title": "GuardDuty not enabled",
+      "cloud": "aws",
+      "service": "GuardDuty",
+      "category": "Security Posture",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "guardduty",
+      "detail": "GuardDuty is enabled with an active detector.",
+      "remediation": "Enable GuardDuty with an active detector and integrate findings into your SIEM.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SM-001",
+      "check_title": "Secret rotation disabled",
+      "cloud": "aws",
+      "service": "Secrets Manager",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "secret:legacy-api-key",
+      "detail": "Secret rotation is disabled; a leaked secret keeps working indefinitely.",
+      "remediation": "Enable automatic rotation (every 30-90 days) for all secrets.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ACM-001",
+      "check_title": "In-use certificate expiring within 30 days",
+      "cloud": "aws",
+      "service": "ACM",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "cert:arn:aws:acm:us-east-1:111122223333:cert/expiring",
+      "detail": "In-use certificate expires in 12 day(s); renew immediately to avoid service outage.",
+      "remediation": "Enable automatic renewal or monitor certificate expiry.",
+      "evidence": {
+        "days_to_expiry": 12,
+        "config": {
+          "arn": "arn:aws:acm:us-east-1:111122223333:cert/expiring",
+          "in_use": true,
+          "days_to_expiry": 12
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CT-005",
+      "check_title": "CloudTrail not actively logging",
+      "cloud": "aws",
+      "service": "CloudTrail",
+      "category": "Logging & Monitoring",
+      "severity": "CRITICAL",
+      "status": "PASS",
+      "resource": "cloudtrail",
+      "detail": "CloudTrail is actively logging.",
+      "remediation": "Verify trail status shows IsLogging true and fix the delivery configuration.",
+      "evidence": {
+        "config": {
+          "exists": true,
+          "multi_region": true,
+          "log_file_validation": false,
+          "logging": true,
+          "s3_bucket_encrypted": false,
+          "kms_key_id": false
+        }
+      },
+      "cis": "CIS AWS 3.1"
+    },
+    {
+      "check_id": "AWS-SQS-001",
+      "check_title": "SQS queue publicly accessible",
+      "cloud": "aws",
+      "service": "SQS",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "https://sqs.us-east-1.amazonaws.com/111122223333/alerts",
+      "detail": "SQS queue policy allows anonymous SendMessage.",
+      "remediation": "Restrict queue policies to trusted principals.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SQS-002",
+      "check_title": "SQS queue not encrypted",
+      "cloud": "aws",
+      "service": "SQS",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "https://sqs.us-east-1.amazonaws.com/111122223333/alerts",
+      "detail": "SQS queue does not use server-side encryption.",
+      "remediation": "Enable SSE (SQS-managed or KMS) on all queues.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-DDB-001",
+      "check_title": "DynamoDB point-in-time recovery disabled",
+      "cloud": "aws",
+      "service": "DynamoDB",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ddb:legacy-log",
+      "detail": "Point-in-time recovery is disabled; data can only be restored to the last backup.",
+      "remediation": "Enable PITR on all production tables.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-DDB-002",
+      "check_title": "DynamoDB table not KMS-encrypted",
+      "cloud": "aws",
+      "service": "DynamoDB",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "ddb:legacy-log",
+      "detail": "Table is not encrypted with a KMS key.",
+      "remediation": "Configure KMS customer-managed keys for tables.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RSH-001",
+      "check_title": "Redshift cluster publicly accessible",
+      "cloud": "aws",
+      "service": "Redshift",
+      "category": "Database",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "redshift:analytics",
+      "detail": "Redshift cluster is publicly accessible.",
+      "remediation": "Disable public accessibility and place clusters in private subnets.",
+      "evidence": {
+        "config": {
+          "id": "analytics",
+          "public": true,
+          "encrypted": true,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RSH-002",
+      "check_title": "Redshift encryption disabled",
+      "cloud": "aws",
+      "service": "Redshift",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "redshift-clusters",
+      "detail": "All Redshift clusters are encrypted.",
+      "remediation": "Enable cluster encryption (may require re-creation).",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RSH-003",
+      "check_title": "Redshift audit logging disabled",
+      "cloud": "aws",
+      "service": "Redshift",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "redshift:analytics",
+      "detail": "Redshift audit logging is disabled.",
+      "remediation": "Enable audit logging to S3/CloudWatch.",
+      "evidence": {
+        "config": {
+          "id": "analytics",
+          "public": true,
+          "encrypted": true,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EFS-001",
+      "check_title": "EFS file system not encrypted",
+      "cloud": "aws",
+      "service": "EFS",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "efs:fs-legacy",
+      "detail": "EFS file system is not encrypted at rest.",
+      "remediation": "Recreate the file system with encryption enabled.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EFS-002",
+      "check_title": "EFS backup policy missing",
+      "cloud": "aws",
+      "service": "EFS",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "efs:fs-legacy",
+      "detail": "EFS file system has no automatic backup policy.",
+      "remediation": "Attach an AWS Backup policy to the file system.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC-001",
+      "check_title": "ElastiCache not encrypted at rest",
+      "cloud": "aws",
+      "service": "ElastiCache",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "elasticache:cache-legacy",
+      "detail": "ElastiCache cluster is not encrypted at rest.",
+      "remediation": "Enable at-rest encryption on the cluster.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC-002",
+      "check_title": "ElastiCache not encrypted in transit",
+      "cloud": "aws",
+      "service": "ElastiCache",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "elasticache:cache-legacy",
+      "detail": "ElastiCache cluster does not encrypt traffic in transit.",
+      "remediation": "Enable in-transit encryption (Redis AUTH).",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-004",
+      "check_title": "RDS deletion protection disabled",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "Deletion protection is disabled; the database can be deleted accidentally or maliciously.",
+      "remediation": "Enable deletion protection on all production instances.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-005",
+      "check_title": "RDS instance not Multi-AZ",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "RDS instance is not Multi-AZ; failover on AZ loss is unavailable.",
+      "remediation": "Enable Multi-AZ deployment.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-001",
+      "check_title": "Load balancer without HTTPS/TLS listener",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "elb:legacy-elb",
+      "detail": "Load balancer has no HTTPS/TLS listener; client traffic is plaintext.",
+      "remediation": "Add HTTPS/TLS listeners and redirect HTTP to HTTPS.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-002",
+      "check_title": "Load balancer access logging disabled",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "elb:legacy-elb",
+      "detail": "Load balancer access logging is disabled.",
+      "remediation": "Enable access logs to a centralized S3 bucket.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-002",
+      "check_title": "Load balancer access logging disabled",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "elb:stage-alb",
+      "detail": "Load balancer access logging is disabled.",
+      "remediation": "Enable access logs to a centralized S3 bucket.",
+      "evidence": {
+        "config": {
+          "name": "stage-alb",
+          "type": "application",
+          "https": true,
+          "access_logs": false,
+          "ssl_policy_secure": true,
+          "http_no_redirect": false,
+          "waf_attached": true,
+          "deletion_protection": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EKS-001",
+      "check_title": "EKS cluster API endpoint publicly accessible",
+      "cloud": "aws",
+      "service": "EKS",
+      "category": "Kubernetes",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "eks:legacy-eks",
+      "detail": "EKS cluster API endpoint is publicly accessible.",
+      "remediation": "Disable public endpoint access and use private endpoints with authorized CIDRs.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-API-001",
+      "check_title": "API Gateway access logging disabled",
+      "cloud": "aws",
+      "service": "API Gateway",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "apigw:internal-api",
+      "detail": "API Gateway stage has no access logging or method settings.",
+      "remediation": "Enable access logging and method settings on all stages.",
+      "evidence": {
+        "config": {
+          "name": "internal-api",
+          "public": true,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-R53-001",
+      "check_title": "DNSSEC not enabled",
+      "cloud": "aws",
+      "service": "Route 53",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "route53",
+      "detail": "DNSSEC is not enabled on any hosted zone; DNS responses can be spoofed.",
+      "remediation": "Enable DNSSEC signing on production hosted zones.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-005",
+      "check_title": "Account-level S3 block public access disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "s3-block-public",
+      "detail": "Account-level S3 block public access is not fully enabled.",
+      "remediation": "Enable all four block public access settings at account level.",
+      "evidence": {},
+      "cis": "CIS AWS 2.1.4"
+    },
+    {
+      "check_id": "AWS-CF-001",
+      "check_title": "CloudFront distribution without WAF",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Distribution is not associated with an AWS WAF web ACL; no L7 filtering.",
+      "remediation": "Associate an AWS WAF web ACL with every distribution.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-002",
+      "check_title": "CloudFront minimum TLS below 1.2",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Minimum TLS protocol is TLSv1 (require TLSv1.2+).",
+      "remediation": "Set MinimumProtocolVersion to TLSv1.2_2021.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-003",
+      "check_title": "CloudFront access logging disabled",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Distribution access logging is disabled.",
+      "remediation": "Enable standard/real-time logging to S3.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-004",
+      "check_title": "CloudFront uses default certificate",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Distribution uses the default cloudfront.net certificate; serve content under your own domain with an ACM cert.",
+      "remediation": "Attach an ACM certificate and serve under your domain.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-005",
+      "check_title": "CloudFront origin uses HTTP",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Origin protocol policy is HTTP-only; edge-to-origin traffic is plaintext.",
+      "remediation": "Set origin protocol policy to HTTPS-only.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-003",
+      "check_title": "Load balancer uses deprecated SSL policy",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "elb:legacy-elb",
+      "detail": "Listener uses a deprecated SSL policy (TLS 1.0/1.1 or pre-2016 ciphers).",
+      "remediation": "Use an ELBSecurityPolicy-TLS-1-2 policy on all listeners.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-004",
+      "check_title": "HTTP listener without HTTPS redirect",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "elb:legacy-elb",
+      "detail": "HTTP listener does not redirect to HTTPS.",
+      "remediation": "Add a listener rule redirecting HTTP to HTTPS.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-005",
+      "check_title": "Application load balancer without WAF",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "load-balancers",
+      "detail": "All application load balancers have WAF attached.",
+      "remediation": "Associate a WAF web ACL with the ALB.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-006",
+      "check_title": "RDS log export to CloudWatch disabled",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "RDS does not export logs (error/general/slow-query) to CloudWatch.",
+      "remediation": "Enable CloudWatch log exports on RDS instances.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EKS-002",
+      "check_title": "EKS control plane logging disabled",
+      "cloud": "aws",
+      "service": "EKS",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "eks:legacy-eks",
+      "detail": "EKS control plane logging (audit/authenticator) is not enabled.",
+      "remediation": "Enable audit and authenticator log types.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CWG-001",
+      "check_title": "Log group retention below 365 days",
+      "cloud": "aws",
+      "service": "CloudWatch Logs",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "loggroup:/aws/lambda/old-etl",
+      "detail": "Log group retention is 30; keep audit logs at least 365 days.",
+      "remediation": "Set log group retention to >= 365 days (or never expire for compliance logs).",
+      "evidence": {
+        "retention_days": 30,
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CWG-001",
+      "check_title": "Log group retention below 365 days",
+      "cloud": "aws",
+      "service": "CloudWatch Logs",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "loggroup:/aws/rds/prod-db",
+      "detail": "Log group retention is never-expire-but-unset; keep audit logs at least 365 days.",
+      "remediation": "Set log group retention to >= 365 days (or never expire for compliance logs).",
+      "evidence": {
+        "retention_days": null,
+        "config": {
+          "id": "prod-db",
+          "publicly_accessible": true,
+          "storage_encrypted": true,
+          "backup_retention_days": 14,
+          "deletion_protection": true,
+          "multi_az": true,
+          "minor_version": "15.7",
+          "log_exports": true,
+          "auto_minor_upgrade": true,
+          "enhanced_monitoring": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CWG-002",
+      "check_title": "Log group not KMS-encrypted",
+      "cloud": "aws",
+      "service": "CloudWatch Logs",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "loggroup:/aws/lambda/old-etl",
+      "detail": "Log group is not encrypted with a KMS key.",
+      "remediation": "Encrypt log groups with a KMS CMK.",
+      "evidence": {
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CWG-002",
+      "check_title": "Log group not KMS-encrypted",
+      "cloud": "aws",
+      "service": "CloudWatch Logs",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "loggroup:/aws/rds/prod-db",
+      "detail": "Log group is not encrypted with a KMS key.",
+      "remediation": "Encrypt log groups with a KMS CMK.",
+      "evidence": {
+        "config": {
+          "id": "prod-db",
+          "publicly_accessible": true,
+          "storage_encrypted": true,
+          "backup_retention_days": 14,
+          "deletion_protection": true,
+          "multi_az": true,
+          "minor_version": "15.7",
+          "log_exports": true,
+          "auto_minor_upgrade": true,
+          "enhanced_monitoring": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-BACK-001",
+      "check_title": "No AWS Backup plans",
+      "cloud": "aws",
+      "service": "AWS Backup",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aws-backup",
+      "detail": "No AWS Backup plans exist; resources rely on per-service backups only.",
+      "remediation": "Create AWS Backup plans covering critical resources.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SM-002",
+      "check_title": "Secret not encrypted with CMK",
+      "cloud": "aws",
+      "service": "Secrets Manager",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "secret:legacy-api-key",
+      "detail": "Secret uses the default AWS-managed KMS key, not a customer-managed key.",
+      "remediation": "Encrypt secrets with a customer-managed KMS key.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-009",
+      "check_title": "EBS snapshot publicly shared",
+      "cloud": "aws",
+      "service": "EC2",
+      "category": "Storage & Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "snapshot:snap-leaked",
+      "detail": "EBS snapshot is public; any AWS account can copy it and read the data.",
+      "remediation": "Set snapshot createVolumePermission to private.",
+      "evidence": {
+        "config": {
+          "id": "snap-leaked",
+          "public": true,
+          "encrypted": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-IAM-007",
+      "check_title": "Role trust allows cross-account or wildcard principals",
+      "cloud": "aws",
+      "service": "IAM",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "role:delegated-role",
+      "detail": "Role trust policy allows principals from another account; verify it is intended and limited.",
+      "remediation": "Restrict assume-role principals to known accounts/roles.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-006",
+      "check_title": "S3 lifecycle rules missing",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "s3://legacy-public",
+      "detail": "Bucket has no lifecycle rules; stale objects accumulate cost and risk.",
+      "remediation": "Define lifecycle rules to expire/transition stale objects.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-006",
+      "check_title": "S3 lifecycle rules missing",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "s3://archive",
+      "detail": "Bucket has no lifecycle rules; stale objects accumulate cost and risk.",
+      "remediation": "Define lifecycle rules to expire/transition stale objects.",
+      "evidence": {
+        "config": {
+          "name": "archive",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": false,
+          "logging": true,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-LMB-002",
+      "check_title": "Lambda function publicly invokable",
+      "cloud": "aws",
+      "service": "Lambda",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "lambda:old-etl",
+      "detail": "Function resource policy allows anonymous invoke.",
+      "remediation": "Remove public resource policies; use API Gateway/IAM auth.",
+      "evidence": {
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-DDB-003",
+      "check_title": "DynamoDB table policy public",
+      "cloud": "aws",
+      "service": "DynamoDB",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "dynamodb-tables",
+      "detail": "No tables have public policies.",
+      "remediation": "Remove anonymous principals from table policies.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-006",
+      "check_title": "CloudFront geo restriction not enabled",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "No geo restriction (whitelist) is configured on the distribution.",
+      "remediation": "Configure a geo-restriction whitelist on the distribution.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-007",
+      "check_title": "CloudFront field-level encryption not enabled",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "Field-level encryption is not enabled; sensitive fields are delivered to the origin in plaintext.",
+      "remediation": "Enable field-level encryption and configure encrypted fields.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CF-008",
+      "check_title": "CloudFront S3 origin without OAC/OAI",
+      "cloud": "aws",
+      "service": "CloudFront",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "cf:E2LEGACY",
+      "detail": "S3 origin is not locked down with OAC/OAI; the bucket may remain publicly readable.",
+      "remediation": "Restrict the origin bucket to CloudFront via OAC/OAI.",
+      "evidence": {
+        "config": {
+          "id": "E2LEGACY",
+          "waf_attached": false,
+          "min_tls": "TLSv1",
+          "logging": false,
+          "default_cert": true,
+          "origin_http": true,
+          "geo_restricted": false,
+          "field_level_encryption": false,
+          "oac_oai": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CW-011",
+      "check_title": "No CloudWatch dashboards",
+      "cloud": "aws",
+      "service": "CloudWatch",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "cloudwatch",
+      "detail": "No CloudWatch dashboards; operational/security metrics have no centralized view.",
+      "remediation": "Create dashboards for key metrics (errors, throttles, cost).",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-CT-006",
+      "check_title": "CloudTrail log bucket not encrypted",
+      "cloud": "aws",
+      "service": "CloudTrail",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "cloudtrail",
+      "detail": "The CloudTrail log bucket is not encrypted at rest.",
+      "remediation": "Enable SSE on the CloudTrail bucket (SSE-S3 or SSE-KMS).",
+      "evidence": {
+        "config": {
+          "exists": true,
+          "multi_region": true,
+          "log_file_validation": false,
+          "logging": true,
+          "s3_bucket_encrypted": false,
+          "kms_key_id": false
+        }
+      },
+      "cis": "CIS AWS 3.5"
+    },
+    {
+      "check_id": "AWS-CT-007",
+      "check_title": "CloudTrail not using KMS key",
+      "cloud": "aws",
+      "service": "CloudTrail",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cloudtrail",
+      "detail": "CloudTrail is not configured with a KMS CMK for log encryption.",
+      "remediation": "Configure CloudTrail with a KMS key for log encryption.",
+      "evidence": {
+        "config": {
+          "exists": true,
+          "multi_region": true,
+          "log_file_validation": false,
+          "logging": true,
+          "s3_bucket_encrypted": false,
+          "kms_key_id": false
+        }
+      },
+      "cis": "CIS AWS 3.5"
+    },
+    {
+      "check_id": "AWS-EC2-010",
+      "check_title": "EBS snapshot not encrypted",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "snap:snap-leaked",
+      "detail": "EBS snapshot is not encrypted at rest.",
+      "remediation": "Copy snapshots with encryption enabled and delete the originals.",
+      "evidence": {
+        "config": {
+          "id": "snap-leaked",
+          "public": true,
+          "encrypted": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-011",
+      "check_title": "Public instance without security group",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "i-03",
+      "detail": "Instance has a public IP but no security group is attached.",
+      "remediation": "Attach a restrictive security group to every instance.",
+      "evidence": {
+        "config": {
+          "id": "03",
+          "public_ip": "54.7.8.9",
+          "security_groups": [],
+          "imdsv2": false,
+          "termination_protection": false,
+          "monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EC2-012",
+      "check_title": "Unused security group",
+      "cloud": "aws",
+      "service": "EC2/Network",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "sg:sg-db",
+      "detail": "Security group is not referenced by any instance.",
+      "remediation": "Delete unused security groups or document their purpose.",
+      "evidence": {
+        "config": {
+          "id": "sg-03",
+          "name": "sg-db",
+          "ingress": [
+            {
+              "proto": "tcp",
+              "ports": [
+                3306,
+                3306
+              ],
+              "cidr": [
+                "0.0.0.0/0"
+              ]
+            }
+          ]
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-007",
+      "check_title": "RDS auto minor version upgrade disabled",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "Auto minor version upgrade is disabled; known engine fixes are missed.",
+      "remediation": "Enable auto minor version upgrade on RDS instances.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-008",
+      "check_title": "Public RDS snapshot",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Data Protection",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "rds-snapshots",
+      "detail": "At least one RDS snapshot is publicly shareable.",
+      "remediation": "Revoke public sharing on all RDS snapshots.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-LMB-003",
+      "check_title": "Lambda function not in a VPC",
+      "cloud": "aws",
+      "service": "Lambda",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "lambda:old-etl",
+      "detail": "Lambda function is not attached to a VPC; it runs on shared AWS-managed network infrastructure.",
+      "remediation": "Attach Lambda functions to a VPC when they access VPC resources.",
+      "evidence": {
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-LMB-004",
+      "check_title": "Lambda X-Ray tracing disabled",
+      "cloud": "aws",
+      "service": "Lambda",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "lambda:old-etl",
+      "detail": "X-Ray tracing is disabled; no end-to-end request traces for the function.",
+      "remediation": "Enable active tracing on Lambda functions.",
+      "evidence": {
+        "config": {
+          "name": "old-etl",
+          "runtime": "python3.7",
+          "public_policy": true,
+          "in_vpc": false,
+          "tracing": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-007",
+      "check_title": "S3 MFA delete not enabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "s3://legacy-public",
+      "detail": "MFA delete is not enabled; destructive deletes bypass multi-factor authentication.",
+      "remediation": "Enable MFA delete on versioned buckets (requires a root MFA token).",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-007",
+      "check_title": "S3 MFA delete not enabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "s3://backups",
+      "detail": "MFA delete is not enabled; destructive deletes bypass multi-factor authentication.",
+      "remediation": "Enable MFA delete on versioned buckets (requires a root MFA token).",
+      "evidence": {
+        "config": {
+          "name": "backups",
+          "public": false,
+          "public_acl": null,
+          "encryption": false,
+          "versioning": true,
+          "logging": true,
+          "lifecycle": true,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-007",
+      "check_title": "S3 MFA delete not enabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "s3://archive",
+      "detail": "MFA delete is not enabled; destructive deletes bypass multi-factor authentication.",
+      "remediation": "Enable MFA delete on versioned buckets (requires a root MFA token).",
+      "evidence": {
+        "config": {
+          "name": "archive",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": false,
+          "logging": true,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SNS-002",
+      "check_title": "SNS topic not KMS-encrypted",
+      "cloud": "aws",
+      "service": "SNS",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "arn:aws:sns:us-east-1:111122223333:alerts",
+      "detail": "SNS topic is not encrypted with a KMS key.",
+      "remediation": "Associate a KMS key with the topic.",
+      "evidence": {
+        "config": {
+          "topic_arn": "arn:aws:sns:us-east-1:111122223333:alerts",
+          "public": true,
+          "kms_encrypted": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ECR-002",
+      "check_title": "ECR image scanning on push disabled",
+      "cloud": "aws",
+      "service": "ECR",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ecr:legacy",
+      "detail": "Image scanning on push is disabled; vulnerabilities are not detected before deploy.",
+      "remediation": "Enable enhanced scanning on ECR repositories.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ECR-003",
+      "check_title": "ECR lifecycle policy missing",
+      "cloud": "aws",
+      "service": "ECR",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "ecr:legacy",
+      "detail": "No lifecycle policy; stale images accumulate and may retain vulnerable code.",
+      "remediation": "Add a lifecycle policy to expire old/untagged images.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SQS-003",
+      "check_title": "SQS queue without dead-letter queue",
+      "cloud": "aws",
+      "service": "SQS",
+      "category": "Resilience",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "alerts",
+      "detail": "Queue has no dead-letter queue; failed messages are silently lost.",
+      "remediation": "Configure a DLQ with a redrive policy.",
+      "evidence": {
+        "config": {
+          "topic_arn": "arn:aws:sns:us-east-1:111122223333:alerts",
+          "public": true,
+          "kms_encrypted": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-006",
+      "check_title": "Classic ELB without TLS listener",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "elb:legacy-elb",
+      "detail": "Classic load balancer has no HTTPS/SSL listener.",
+      "remediation": "Terminate TLS on the listener or migrate to ALB/NLB with TLS.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ACM-002",
+      "check_title": "Certificate nearing expiry",
+      "cloud": "aws",
+      "service": "ACM",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "expiring",
+      "detail": "Certificate expires in 12 days (< 30); renewal may not complete in time.",
+      "remediation": "Automate renewal or rotate certificates with > 30 days margin.",
+      "evidence": {
+        "config": {
+          "arn": "arn:aws:acm:us-east-1:111122223333:cert/expiring",
+          "in_use": true,
+          "days_to_expiry": 12
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-R53-002",
+      "check_title": "DNS query logging not enabled",
+      "cloud": "aws",
+      "service": "Route 53",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "route53",
+      "detail": "DNS query logging is not enabled; resolver queries have no audit trail.",
+      "remediation": "Enable query logging to CloudWatch Logs.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-BACK-002",
+      "check_title": "No AWS Backup vault",
+      "cloud": "aws",
+      "service": "Backup",
+      "category": "Backup & Recovery",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "backup",
+      "detail": "No AWS Backup vault; backup jobs have no durable destination.",
+      "remediation": "Create backup vaults and point plans at them.",
+      "evidence": {
+        "config": {
+          "name": "backups",
+          "public": false,
+          "public_acl": null,
+          "encryption": false,
+          "versioning": true,
+          "logging": true,
+          "lifecycle": true,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ECS-001",
+      "check_title": "ECS Container Insights disabled",
+      "cloud": "aws",
+      "service": "ECS",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ecs:legacy-ecs",
+      "detail": "Container Insights is disabled; no per-task metrics or logs are collected.",
+      "remediation": "Enable Container Insights on ECS clusters.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ECS-002",
+      "check_title": "ECS task uses host network mode",
+      "cloud": "aws",
+      "service": "ECS",
+      "category": "Container Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "taskdef:legacy-task",
+      "detail": "Task uses host network mode; containers share the host network stack.",
+      "remediation": "Use awsvpc network mode for task isolation.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ECS-003",
+      "check_title": "ECS task definition without execution role",
+      "cloud": "aws",
+      "service": "ECS",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "taskdef:legacy-task",
+      "detail": "Task definition has no execution role; it cannot fetch secrets or pull images securely.",
+      "remediation": "Attach an execution role to task definitions.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-IOT-001",
+      "check_title": "IoT logging level not ERROR",
+      "cloud": "aws",
+      "service": "IoT",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "iot",
+      "detail": "IoT logging level is INFO; no audit trail of device activity.",
+      "remediation": "Set IoT logging to ERROR level (or higher verbosity).",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AWS-IOT-002",
+      "check_title": "IoT policy grants wildcard principals",
+      "cloud": "aws",
+      "service": "IoT",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "iot-policy:legacy-iot-policy",
+      "detail": "IoT policy grants wildcard principals.",
+      "remediation": "Scope IoT policies to specific certificates/principals.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SES-001",
+      "check_title": "SES identity without verified DKIM",
+      "cloud": "aws",
+      "service": "SES",
+      "category": "Email Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ses:legacy@example.com",
+      "detail": "DKIM is not verified for the identity; spoofing is harder to detect.",
+      "remediation": "Verify DKIM records for every SES identity.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-ELB-007",
+      "check_title": "ALB deletion protection disabled",
+      "cloud": "aws",
+      "service": "ELB",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "elb:stage-alb",
+      "detail": "Deletion protection is disabled; the load balancer can be deleted accidentally.",
+      "remediation": "Enable deletion protection on ALBs.",
+      "evidence": {
+        "config": {
+          "name": "stage-alb",
+          "type": "application",
+          "https": true,
+          "access_logs": false,
+          "ssl_policy_secure": true,
+          "http_no_redirect": false,
+          "waf_attached": true,
+          "deletion_protection": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-EFS-003",
+      "check_title": "EFS without lifecycle policy",
+      "cloud": "aws",
+      "service": "EFS",
+      "category": "Security Posture",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "efs:fs-legacy",
+      "detail": "No lifecycle policy; infrequently accessed files never move to lower cost tiers.",
+      "remediation": "Add a lifecycle policy to transition IA files.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-008",
+      "check_title": "S3 Object Lock disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "s3://legacy-public",
+      "detail": "Object Lock is disabled; objects can be permanently overwritten or deleted.",
+      "remediation": "Enable Object Lock (with versioning + retention) on critical buckets.",
+      "evidence": {
+        "config": {
+          "name": "legacy-public",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": true,
+          "logging": false,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-008",
+      "check_title": "S3 Object Lock disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "s3://backups",
+      "detail": "Object Lock is disabled; objects can be permanently overwritten or deleted.",
+      "remediation": "Enable Object Lock (with versioning + retention) on critical buckets.",
+      "evidence": {
+        "config": {
+          "name": "backups",
+          "public": false,
+          "public_acl": null,
+          "encryption": false,
+          "versioning": true,
+          "logging": true,
+          "lifecycle": true,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-S3-008",
+      "check_title": "S3 Object Lock disabled",
+      "cloud": "aws",
+      "service": "S3",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "s3://archive",
+      "detail": "Object Lock is disabled; objects can be permanently overwritten or deleted.",
+      "remediation": "Enable Object Lock (with versioning + retention) on critical buckets.",
+      "evidence": {
+        "config": {
+          "name": "archive",
+          "public": false,
+          "public_acl": null,
+          "encryption": true,
+          "versioning": false,
+          "logging": true,
+          "lifecycle": false,
+          "mfa_delete": false,
+          "object_lock": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-DDB-004",
+      "check_title": "DynamoDB deletion protection disabled",
+      "cloud": "aws",
+      "service": "DynamoDB",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ddb:legacy-log",
+      "detail": "Deletion protection is disabled; the table can be dropped accidentally.",
+      "remediation": "Enable deletion protection on production tables.",
+      "evidence": {
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-GD-002",
+      "check_title": "GuardDuty S3 protection disabled",
+      "cloud": "aws",
+      "service": "GuardDuty",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "guardduty:detector-main",
+      "detail": "S3 protection is disabled; object-level data exfiltration is not monitored.",
+      "remediation": "Enable S3 protection in the GuardDuty detector.",
+      "evidence": {
+        "config": {
+          "id": "detector-main",
+          "enabled": true,
+          "s3_protection": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-RDS-009",
+      "check_title": "RDS enhanced monitoring disabled",
+      "cloud": "aws",
+      "service": "RDS",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "rds:stage-db",
+      "detail": "Enhanced monitoring is disabled; OS-level DB metrics are not collected.",
+      "remediation": "Enable enhanced monitoring with a 60s granularity.",
+      "evidence": {
+        "config": {
+          "id": "stage-db",
+          "publicly_accessible": false,
+          "storage_encrypted": false,
+          "backup_retention_days": 3,
+          "deletion_protection": false,
+          "multi_az": false,
+          "minor_version": "14.2",
+          "log_exports": false,
+          "auto_minor_upgrade": false,
+          "enhanced_monitoring": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SGM-001",
+      "check_title": "SageMaker notebook with direct internet access",
+      "cloud": "aws",
+      "service": "SageMaker",
+      "category": "Security Posture",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sagemaker-notebook:ml-lab-legacy",
+      "detail": "Notebook instance has direct internet access; code running in it (or its IAM role) can reach the internet and exfiltrate data.",
+      "remediation": "Launch notebooks in a VPC-only mode (DirectInternetAccess=Disabled) and route egress through a NAT gateway or VPC endpoint.",
+      "evidence": {
+        "direct_internet_access": "Enabled",
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SGM-002",
+      "check_title": "SageMaker notebook not KMS-encrypted",
+      "cloud": "aws",
+      "service": "SageMaker",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sagemaker-notebook:ml-lab-legacy",
+      "detail": "Notebook instance root volume is not encrypted with a customer-managed KMS key.",
+      "remediation": "Create the notebook with a customer-managed KMS key in KmsKeyId on the CreateNotebookInstance call.",
+      "evidence": {
+        "kms_key_id": null,
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AWS-SGM-003",
+      "check_title": "SageMaker endpoint data capture disabled",
+      "cloud": "aws",
+      "service": "SageMaker",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sagemaker-endpoint:legacy-model",
+      "detail": "Model endpoint has no data capture enabled; request/response payloads are not recorded for monitoring and audit.",
+      "remediation": "Enable DataCaptureConfig on the endpoint configuration with a sampling percentage and an S3 destination.",
+      "evidence": {
+        "data_capture_config": "Disabled",
+        "config": {
+          "key_id": "legacy",
+          "rotation_enabled": false
+        }
+      },
+      "cis": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+cloud,check_id,resource
+aws,AWS-S3-001,s3://legacy-public
+aws,AWS-IAM-002,user/root
+aws,AWS-RDS-003,db:prod-db
+aws,AWS-EC2-004,ami:ami-0abc123
+aws,AWS-S3-999,nonexistent-check
+azure,AZ-STR-002,storage:proddata

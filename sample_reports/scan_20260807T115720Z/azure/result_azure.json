@@ -1,0 +1,2104 @@
+{
+  "cloud": "azure",
+  "account_id": "aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4eeee4",
+  "account_name": "demo-prod-azure",
+  "timestamp": "2026-08-07T11:57:21Z",
+  "principal": "demo-security-reviewer@contoso.onmicrosoft.com",
+  "auth_mode": "demo",
+  "regions": [],
+  "checks_total": 90,
+  "checks_executed": 90,
+  "risk_score": 47.4,
+  "summary": {
+    "by_status": {
+      "FAIL": 90,
+      "PASS": 3
+    },
+    "failed_by_severity": {
+      "HIGH": 27,
+      "CRITICAL": 3,
+      "LOW": 16,
+      "MEDIUM": 44
+    },
+    "failed_by_service": {
+      "IAM/Entra ID": 6,
+      "Storage": 7,
+      "Key Vault": 6,
+      "Network": 6,
+      "SQL": 7,
+      "Compute": 7,
+      "IAM/RBAC": 4,
+      "Monitoring": 2,
+      "Container Registry": 2,
+      "App Service": 8,
+      "Cosmos DB": 4,
+      "AKS": 7,
+      "Redis Cache": 2,
+      "Microsoft Defender": 1,
+      "Azure Policy": 2,
+      "App Configuration": 2,
+      "Event Hubs": 2,
+      "Service Bus": 1,
+      "Log Analytics": 3,
+      "Microsoft Sentinel": 2,
+      "API Management": 3,
+      "Application Gateway": 2,
+      "Front Door": 2,
+      "Functions": 2
+    },
+    "failed_by_category": {
+      "Identity & Access": 17,
+      "Storage & Data Protection": 1,
+      "Network Security": 28,
+      "Data Protection": 9,
+      "Key Management": 3,
+      "Database": 1,
+      "Logging & Monitoring": 12,
+      "Container Security": 1,
+      "Kubernetes": 5,
+      "Security Posture": 11,
+      "Backup & Recovery": 2
+    }
+  },
+  "errors": [],
+  "snapshot_summary": {
+    "subscription_id": 1,
+    "account_name": 1,
+    "principal": 1,
+    "assignments": 3,
+    "storage": 3,
+    "keyvaults": 2,
+    "nsgs": 2,
+    "sql": 2,
+    "disks": 2,
+    "vms": 2,
+    "activity_log": 1,
+    "acr": 2,
+    "appservices": 2,
+    "cosmos": 2,
+    "aks": 2,
+    "redis": 2,
+    "bastion": 1,
+    "defender": 2,
+    "custom_roles": 2,
+    "policy_assignments": 1,
+    "policy_exemptions_no_expiry": 1,
+    "appconfig": 2,
+    "ddos_plans": 1,
+    "network_watcher": 1,
+    "eventhubs": 2,
+    "servicebus": 2,
+    "log_analytics": 4,
+    "sentinel": 2,
+    "apim": 2,
+    "appgateways": 2,
+    "activity_log_alerts": 1,
+    "aad": 4,
+    "frontdoors": 2,
+    "functions": 2
+  },
+  "extra": {
+    "frameworks": [],
+    "privilege_check": {
+      "level": "elevated",
+      "warnings": [
+        "Principal 'infra-admins@contoso.com' holds 'Contributor' at /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4eeee4 - prefer a Reader-only service principal."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "check_id": "AZ-IAM-001",
+      "check_title": "MFA not enforced for all users",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "user:bob@contoso.com",
+      "detail": "User bob@contoso.com has no MFA-capable authentication method registered; a phished password is enough to sign in as them.",
+      "remediation": "Register an MFA-capable method for every user and enforce MFA via a Conditional Access policy targeting all users (or security defaults if no CA policies exist).",
+      "evidence": {
+        "privileged": false
+      },
+      "cis": "CIS Azure 1.2.1"
+    },
+    {
+      "check_id": "AZ-IAM-001",
+      "check_title": "MFA not enforced for all users",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "user:infra-admin@contoso.com",
+      "detail": "User infra-admin@contoso.com has no MFA-capable authentication method registered; a phished password is enough to sign in as them.",
+      "remediation": "Register an MFA-capable method for every user and enforce MFA via a Conditional Access policy targeting all users (or security defaults if no CA policies exist).",
+      "evidence": {
+        "privileged": true
+      },
+      "cis": "CIS Azure 1.2.1"
+    },
+    {
+      "check_id": "AZ-IAM-002",
+      "check_title": "MFA not enforced for privileged users",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "user:infra-admin@contoso.com",
+      "detail": "Privileged user infra-admin@contoso.com does not have MFA enforced - a single credential compromise grants elevated access.",
+      "remediation": "Enforce MFA on all privileged accounts and require strong authentication for every elevation (PIM + CA MFA grant).",
+      "evidence": {},
+      "cis": "CIS Azure 1.2.2"
+    },
+    {
+      "check_id": "AZ-IAM-003",
+      "check_title": "No Conditional Access policy enforcing MFA",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "conditional-access",
+      "detail": "No enabled Conditional Access policy requires MFA for all users (2 enabled policy/policies found; none targets all users with an MFA grant).",
+      "remediation": "Create an enabled CA policy requiring MFA for all users (and exclude only break-glass accounts).",
+      "evidence": {},
+      "cis": "CIS Azure 1.1.6"
+    },
+    {
+      "check_id": "AZ-IAM-004",
+      "check_title": "Legacy authentication not blocked",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "conditional-access",
+      "detail": "No enabled Conditional Access policy blocks legacy authentication (basic-auth clients bypass MFA entirely).",
+      "remediation": "Create an enabled CA policy blocking legacy authentication for all users and migrate to modern auth.",
+      "evidence": {},
+      "cis": "CIS Azure 1.1.7"
+    },
+    {
+      "check_id": "AZ-IAM-005",
+      "check_title": "No risk-based Conditional Access policy",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "conditional-access",
+      "detail": "A risk-based Conditional Access policy is enabled.",
+      "remediation": "Enable CA risk policies (sign-in and user risk) requiring MFA or blocking access on medium/high risk.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-STR-001",
+      "check_title": "Storage account allows Blob public access",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Storage & Data Protection",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Blob public access is enabled (anonymous read possible).",
+      "remediation": "Set allowBlobPublicAccess=false (default deny) and audit containers with the anonymous access property.",
+      "evidence": {
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": "CIS Azure 3.6"
+    },
+    {
+      "check_id": "AZ-STR-002",
+      "check_title": "Storage account minimum TLS below 1.2",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Minimum TLS version is TLS1_0 (require TLS1_2).",
+      "remediation": "Require TLS 1.2 minimum on all storage accounts.",
+      "evidence": {
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": "CIS Azure 3.1"
+    },
+    {
+      "check_id": "AZ-STR-003",
+      "check_title": "Secure transfer (HTTPS-only) disabled",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Secure transfer (HTTPS-only) is disabled.",
+      "remediation": "Enable the require-secure-transfer flag.",
+      "evidence": {
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": "CIS Azure 3.2"
+    },
+    {
+      "check_id": "AZ-STR-004",
+      "check_title": "Storage account network rules default to Allow",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Network rules default to Allow (public access from any network).",
+      "remediation": "Set network default action to Deny and whitelist trusted networks/service endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": "CIS Azure 3.7"
+    },
+    {
+      "check_id": "AZ-STR-005",
+      "check_title": "Storage encryption uses Microsoft-managed key",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Storage encryption does not use a customer-managed key (CMK).",
+      "remediation": "Optionally configure CMK with a Key Vault-managed key.",
+      "evidence": {
+        "encryption_type": "MicrosoftManaged",
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-STR-005",
+      "check_title": "Storage encryption uses Microsoft-managed key",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "storage:logstore",
+      "detail": "Storage encryption does not use a customer-managed key (CMK).",
+      "remediation": "Optionally configure CMK with a Key Vault-managed key.",
+      "evidence": {
+        "encryption_type": "MicrosoftManaged",
+        "config": {
+          "name": "logstore",
+          "allow_blob_public_access": false,
+          "min_tls": "TLS1_2",
+          "https_only": true,
+          "default_action": "Deny",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-KV-001",
+      "check_title": "Key Vault soft delete disabled",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Key Management",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "Soft delete is disabled; deleted secrets/keys are permanently destroyed.",
+      "remediation": "Enable soft delete (retention >= 90 days) on all vaults.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": "CIS Azure 8.2"
+    },
+    {
+      "check_id": "AZ-KV-002",
+      "check_title": "Key Vault purge protection disabled",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "Purge protection is disabled; vault contents can be purged, defeating soft-delete recovery.",
+      "remediation": "Enable purge protection on vaults holding production secrets.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": "CIS Azure 8.3"
+    },
+    {
+      "check_id": "AZ-KV-003",
+      "check_title": "Key Vault publicly reachable",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "Key Vault network ACLs default to Allow (public).",
+      "remediation": "Restrict network ACLs to deny by default and allow only trusted networks/private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": "CIS Azure 8.4"
+    },
+    {
+      "check_id": "AZ-NSG-001",
+      "check_title": "NSG exposes management ports to any source",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Network Security",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "nsg:nsg-web",
+      "detail": "NSG inbound rules expose ports [22, 443] to any source.",
+      "remediation": "Restrict inbound rules to specific source IPs; use Azure Bastion for RDP/SSH.",
+      "evidence": {
+        "open_ports": [
+          22,
+          443
+        ],
+        "config": {
+          "name": "nsg-web",
+          "associated": true,
+          "flow_logs": true,
+          "flow_retention_days": 120,
+          "rules": [
+            {
+              "proto": "Tcp",
+              "ports": "443",
+              "source": "Internet",
+              "direction": "Inbound"
+            },
+            {
+              "proto": "Tcp",
+              "ports": "22",
+              "source": "*",
+              "direction": "Inbound"
+            }
+          ]
+        }
+      },
+      "cis": "CIS Azure 6.1"
+    },
+    {
+      "check_id": "AZ-NSG-002",
+      "check_title": "NSG not attached to any resource",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "nsg:nsg-dangling",
+      "detail": "NSG is not associated with any subnet or NIC; it provides no protection.",
+      "remediation": "Attach the NSG to the intended subnets/NICs or delete it.",
+      "evidence": {
+        "config": {
+          "name": "nsg-dangling",
+          "associated": false,
+          "flow_logs": true,
+          "flow_retention_days": 14,
+          "rules": [
+            {
+              "proto": "Tcp",
+              "ports": "80",
+              "source": "10.0.0.0/8",
+              "direction": "Inbound"
+            }
+          ]
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SQL-001",
+      "check_title": "SQL server allows public network access",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Database",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "SQL server allows public network access.",
+      "remediation": "Disable public network access; use private endpoints / service endpoints and enforce NSG rules.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": "CIS Azure 4.1.1"
+    },
+    {
+      "check_id": "AZ-SQL-002",
+      "check_title": "SQL server auditing disabled",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Logging & Monitoring",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "SQL auditing is disabled (or not writing to a log analytics workspace / storage).",
+      "remediation": "Enable auditing to a Log Analytics workspace and storage account.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": "CIS Azure 4.1.2"
+    },
+    {
+      "check_id": "AZ-SQL-003",
+      "check_title": "SQL transparent data encryption disabled",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Data Protection",
+      "severity": "HIGH",
+      "status": "PASS",
+      "resource": "sql-servers",
+      "detail": "All SQL servers have TDE enabled.",
+      "remediation": "Enable TDE on the server (default in new deployments).",
+      "evidence": {},
+      "cis": "CIS Azure 4.1.3"
+    },
+    {
+      "check_id": "AZ-VM-001",
+      "check_title": "Managed disk uses platform-managed key",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "disk:vm02_osdisk",
+      "detail": "Managed disk does not use a customer-managed key (platform-managed key only).",
+      "remediation": "Optionally enable disk encryption sets with CMK.",
+      "evidence": {
+        "encryption_type": "EncryptionAtRestWithPlatformKey",
+        "config": {
+          "name": "vm02_osdisk",
+          "encryption_type": "EncryptionAtRestWithPlatformKey",
+          "cmk": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-VM-002",
+      "check_title": "VM with public IP has no NSG",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "VM has a public IP but its NIC/subnet has no network security group.",
+      "remediation": "Associate an NSG (with deny-by-default rules) to the NIC or subnet, or move the VM behind a load balancer.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": "CIS Azure 6.1"
+    },
+    {
+      "check_id": "AZ-RBAC-001",
+      "check_title": "Owner/Contributor assignments at subscription scope",
+      "cloud": "azure",
+      "service": "IAM/RBAC",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "infra-admins@contoso.com",
+      "detail": "'Contributor' role assigned at scope /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4eeee4. Verify the principal requires this privilege and has MFA enforced.",
+      "remediation": "Reduce to least privilege; use PIM for just-in-time elevation and enforce MFA/conditional access.",
+      "evidence": {
+        "principal_type": "Group"
+      },
+      "cis": "CIS Azure 1.23"
+    },
+    {
+      "check_id": "AZ-RBAC-001",
+      "check_title": "Owner/Contributor assignments at subscription scope",
+      "cloud": "azure",
+      "service": "IAM/RBAC",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "deploy-svc",
+      "detail": "'Owner' role assigned at scope /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4eeee4. Verify the principal requires this privilege and has MFA enforced.",
+      "remediation": "Reduce to least privilege; use PIM for just-in-time elevation and enforce MFA/conditional access.",
+      "evidence": {
+        "principal_type": "ServicePrincipal"
+      },
+      "cis": "CIS Azure 1.23"
+    },
+    {
+      "check_id": "AZ-MON-001",
+      "check_title": "Activity log not exported",
+      "cloud": "azure",
+      "service": "Monitoring",
+      "category": "Logging & Monitoring",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "subscription-activity-log",
+      "detail": "No diagnostic settings export the subscription activity log to a workspace/storage.",
+      "remediation": "Create diagnostic settings sending activity logs to a Log Analytics workspace and storage.",
+      "evidence": {},
+      "cis": "CIS Azure 5.1.1"
+    },
+    {
+      "check_id": "AZ-ACR-001",
+      "check_title": "ACR admin account enabled",
+      "cloud": "azure",
+      "service": "Container Registry",
+      "category": "Container Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "acr:legacyacr",
+      "detail": "ACR admin account is enabled (shared static credentials).",
+      "remediation": "Disable the admin account and use managed identities/AAD auth.",
+      "evidence": {
+        "config": {
+          "name": "legacyacr",
+          "admin_enabled": true,
+          "public_network_access": true
+        }
+      },
+      "cis": "CIS Azure 2.6"
+    },
+    {
+      "check_id": "AZ-ACR-002",
+      "check_title": "ACR allows public network access",
+      "cloud": "azure",
+      "service": "Container Registry",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "acr:legacyacr",
+      "detail": "ACR is reachable from the public internet.",
+      "remediation": "Disable public network access; use private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacyacr",
+          "admin_enabled": true,
+          "public_network_access": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-001",
+      "check_title": "App Service HTTPS-only disabled",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "App Service allows plain HTTP (HTTPS-only disabled).",
+      "remediation": "Enable HTTPS-only and set minimum TLS to 1.2.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": "CIS Azure 9.2"
+    },
+    {
+      "check_id": "AZ-COS-001",
+      "check_title": "Cosmos DB allows public network access",
+      "cloud": "azure",
+      "service": "Cosmos DB",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cosmos:legacy-cosmos",
+      "detail": "Cosmos DB account allows public network access.",
+      "remediation": "Restrict network access to selected networks or private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cosmos",
+          "public_network_access": true,
+          "ip_rules": 0,
+          "local_auth": true,
+          "backup_continuous": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-002",
+      "check_title": "App Service minimum TLS below 1.2",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "App Service minimum TLS is 1.0 (require 1.2+).",
+      "remediation": "Set minimum TLS version to 1.2 on all App Services.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": "CIS Azure 9.3"
+    },
+    {
+      "check_id": "AZ-APP-003",
+      "check_title": "Client certificates not required",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "Incoming client certificates are not required.",
+      "remediation": "Enable client certificate authentication (incoming client certificates).",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-004",
+      "check_title": "App Service managed identity not enabled",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Identity & Access",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "Managed identity is not enabled; the app likely uses secrets in configuration.",
+      "remediation": "Enable a system-assigned managed identity and use Key Vault references.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-005",
+      "check_title": "FTPS not restricted",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "FTPS is not restricted (state: AllAllowed).",
+      "remediation": "Set FTPS state to FtpsOnly or Disabled.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-006",
+      "check_title": "App Service authentication disabled",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "App Service authentication (Easy Auth) is not enabled.",
+      "remediation": "Enable App Service authentication backed by Azure AD.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-001",
+      "check_title": "AKS RBAC disabled",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Kubernetes",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "Kubernetes RBAC is disabled on the cluster.",
+      "remediation": "Enable Kubernetes RBAC on the cluster.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-002",
+      "check_title": "AKS cluster not private",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Kubernetes",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "AKS API server is publicly reachable (not a private cluster).",
+      "remediation": "Create a private cluster with private API server access.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-003",
+      "check_title": "AKS network policy not enforced",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "Network policy is not enforced (pod-to-pod lateral movement unrestricted).",
+      "remediation": "Enable Azure network policy or Calico.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-004",
+      "check_title": "AKS Azure AD integration disabled",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "Azure AD integration is not enabled for cluster authentication.",
+      "remediation": "Integrate the cluster with Azure AD for authentication.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-005",
+      "check_title": "AKS pod managed identity disabled",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Identity & Access",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "Pod managed identities are not enabled; pods cannot get scoped Azure credentials safely.",
+      "remediation": "Enable pod managed identity (AAD pod identity / workload identity).",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SQL-004",
+      "check_title": "SQL minimum TLS below 1.2",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "SQL minimum TLS is 1.0 (require 1.2+).",
+      "remediation": "Set minimal TLS version to 1.2 on SQL servers.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": "CIS Azure 4.1.4"
+    },
+    {
+      "check_id": "AZ-SQL-005",
+      "check_title": "SQL vulnerability assessment disabled",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "SQL vulnerability assessment is not enabled.",
+      "remediation": "Enable SQL vulnerability assessment with a scan schedule.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": "CIS Azure 4.1.5"
+    },
+    {
+      "check_id": "AZ-SQL-006",
+      "check_title": "No Azure AD admin on SQL server",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "No Azure AD admin is configured; SQL relies on SQL-authenticated identities.",
+      "remediation": "Configure an Azure AD administrator and use AAD auth.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-RED-001",
+      "check_title": "Redis non-SSL port enabled",
+      "cloud": "azure",
+      "service": "Redis Cache",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "redis:cache-legacy",
+      "detail": "Non-SSL port (6379) is enabled; clients can connect in plaintext.",
+      "remediation": "Disable the non-SSL port (enableNonSslPort=false).",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "non_ssl_enabled": true,
+          "private_endpoint": false
+        }
+      },
+      "cis": "CIS Azure 4.3.1"
+    },
+    {
+      "check_id": "AZ-VM-003",
+      "check_title": "VM boot diagnostics disabled",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "Boot diagnostics are disabled; boot-time issues cannot be debugged or audited.",
+      "remediation": "Enable boot diagnostics with managed storage.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": "CIS Azure 7.3"
+    },
+    {
+      "check_id": "AZ-VM-004",
+      "check_title": "VM OS disk not using CMK",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "OS disk does not use a customer-managed key.",
+      "remediation": "Use disk encryption sets with customer-managed keys.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-NSG-003",
+      "check_title": "NSG flow logs disabled",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "PASS",
+      "resource": "network-security-groups",
+      "detail": "All NSGs have flow logs enabled.",
+      "remediation": "Enable NSG flow logs to a Log Analytics workspace and storage.",
+      "evidence": {},
+      "cis": "CIS Azure 5.1.4"
+    },
+    {
+      "check_id": "AZ-NET-001",
+      "check_title": "No Bastion host deployed",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "bastion",
+      "detail": "No Bastion host; RDP/SSH management traffic likely goes directly over the internet.",
+      "remediation": "Deploy Azure Bastion and remove public RDP/SSH exposure.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-DEF-001",
+      "check_title": "Microsoft Defender plans not on Standard",
+      "cloud": "azure",
+      "service": "Microsoft Defender",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "microsoft-defender",
+      "detail": "Defender plans on Free tier: appservices, dns, sqlservers.",
+      "remediation": "Enable Standard pricing for VMs, storage, SQL, app services and DNS.",
+      "evidence": {},
+      "cis": "CIS Azure 2.1.1"
+    },
+    {
+      "check_id": "AZ-KV-004",
+      "check_title": "Key Vault without private endpoint",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "Key Vault has no private endpoint; traffic to the vault traverses the public network.",
+      "remediation": "Connect vaults via private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-COS-002",
+      "check_title": "Cosmos DB firewall not configured",
+      "cloud": "azure",
+      "service": "Cosmos DB",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cosmos:legacy-cosmos",
+      "detail": "Cosmos DB has no IP firewall rules; access is open to all networks.",
+      "remediation": "Add IP firewall rules or restrict to private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cosmos",
+          "public_network_access": true,
+          "ip_rules": 0,
+          "local_auth": true,
+          "backup_continuous": false
+        }
+      },
+      "cis": "CIS Azure 3.5"
+    },
+    {
+      "check_id": "AZ-RBAC-002",
+      "check_title": "Custom role with wildcard permissions",
+      "cloud": "azure",
+      "service": "IAM/RBAC",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "role:broad-ops",
+      "detail": "Custom role contains wildcard actions, effectively bypassing least privilege.",
+      "remediation": "Replace wildcards with explicit action lists.",
+      "evidence": {
+        "config": {
+          "name": "broad-ops",
+          "broad": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-RBAC-003",
+      "check_title": "Guest users in the directory",
+      "cloud": "azure",
+      "service": "IAM/Entra ID",
+      "category": "Identity & Access",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "entra-id-guests",
+      "detail": "1 guest user(s) in the directory; review their access and lifecycle.",
+      "remediation": "Review guest access and enforce an access-review process.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-POL-001",
+      "check_title": "No Azure Policy assignments",
+      "cloud": "azure",
+      "service": "Azure Policy",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "azure-policy",
+      "detail": "No Azure Policy assignments; the environment has no automated guardrails.",
+      "remediation": "Assign built-in security policy initiatives (e.g. Azure Security Benchmark) at subscription scope.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APPC-001",
+      "check_title": "App Configuration publicly accessible",
+      "cloud": "azure",
+      "service": "App Configuration",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "appcfg:legacy-appcfg",
+      "detail": "App Configuration store is reachable from the public internet.",
+      "remediation": "Disable public network access and use private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APPC-002",
+      "check_title": "App Configuration without private endpoint",
+      "cloud": "azure",
+      "service": "App Configuration",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "appcfg:legacy-appcfg",
+      "detail": "App Configuration store has no private endpoint.",
+      "remediation": "Connect stores via private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-NET-002",
+      "check_title": "No DDoS protection plan",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "ddos-protection",
+      "detail": "No DDoS protection plan; public endpoints lack DDoS mitigation.",
+      "remediation": "Enable DDoS Network Protection on production VNets.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-NET-004",
+      "check_title": "Network Watcher not enabled",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "network-watcher",
+      "detail": "Network Watcher is not enabled; NSG flow logs and connection diagnostics are unavailable.",
+      "remediation": "Enable Network Watcher in all regions.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-KV-005",
+      "check_title": "Key Vault diagnostics not enabled",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "Key Vault audit events are not exported via diagnostic settings.",
+      "remediation": "Enable diagnostic settings sending vault logs to a workspace.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SQL-007",
+      "check_title": "SQL firewall allows all IPs",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "SQL firewall allows 0.0.0.0-255.255.255.255 (all Azure + internet IPs).",
+      "remediation": "Remove allow-all firewall rules and scope to trusted IPs/VNets.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-VM-006",
+      "check_title": "VM without anti-malware protection",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "No anti-malware/security extension installed on the VM.",
+      "remediation": "Install the antimalware or Microsoft Defender extension.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-007",
+      "check_title": "App Service HTTP logging disabled",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Logging & Monitoring",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "HTTP logging is disabled on the App Service.",
+      "remediation": "Enable web server logging on the App Service.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-COS-003",
+      "check_title": "Cosmos DB local authentication enabled",
+      "cloud": "azure",
+      "service": "Cosmos DB",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cosmos:legacy-cosmos",
+      "detail": "Local authentication (primary/secondary keys) is enabled; use Entra ID only.",
+      "remediation": "Disable local auth and use Azure AD/RBAC only.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cosmos",
+          "public_network_access": true,
+          "ip_rules": 0,
+          "local_auth": true,
+          "backup_continuous": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-EVH-001",
+      "check_title": "Event Hubs publicly accessible",
+      "cloud": "azure",
+      "service": "Event Hubs",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "eventhubs:events-legacy",
+      "detail": "Event Hubs namespace allows public network access.",
+      "remediation": "Disable public network access; use private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "events-legacy",
+          "public_network_access": true,
+          "cmk": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-EVH-002",
+      "check_title": "Event Hubs not encrypted with CMK",
+      "cloud": "azure",
+      "service": "Event Hubs",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "eventhubs:events-legacy",
+      "detail": "Event Hubs namespace not encrypted with CMK.",
+      "remediation": "Encrypt namespaces with customer-managed keys.",
+      "evidence": {
+        "config": {
+          "name": "events-legacy",
+          "public_network_access": true,
+          "cmk": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SB-001",
+      "check_title": "Service Bus publicly accessible",
+      "cloud": "azure",
+      "service": "Service Bus",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "servicebus:bus-legacy",
+      "detail": "Service Bus namespace allows public network access.",
+      "remediation": "Disable public network access; use private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "bus-legacy",
+          "public_network_access": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-LOG-001",
+      "check_title": "No Log Analytics workspace",
+      "cloud": "azure",
+      "service": "Log Analytics",
+      "category": "Logging & Monitoring",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "log-analytics",
+      "detail": "No Log Analytics workspace; security logs have no central destination.",
+      "remediation": "Create a Log Analytics workspace and route diagnostics to it.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SEN-001",
+      "check_title": "No Microsoft Sentinel workspace",
+      "cloud": "azure",
+      "service": "Microsoft Sentinel",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sentinel",
+      "detail": "No Microsoft Sentinel workspace; there is no SIEM layer correlating security events.",
+      "remediation": "Enable Microsoft Sentinel on a Log Analytics workspace.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SEN-002",
+      "check_title": "Sentinel workspace without analytics rules",
+      "cloud": "azure",
+      "service": "Microsoft Sentinel",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "sentinel",
+      "detail": "No Sentinel analytics rules; the SIEM collects logs but detects nothing.",
+      "remediation": "Create analytics rule templates for identity, data and network detections.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-POL-002",
+      "check_title": "Policy exemption without expiration",
+      "cloud": "azure",
+      "service": "Azure Policy",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "azure-policy",
+      "detail": "2 policy exemption(s) have no expiration date; exemptions can silently become permanent.",
+      "remediation": "Set an expiration date on every policy exemption.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-KV-006",
+      "check_title": "Key Vault keys without expiry",
+      "cloud": "azure",
+      "service": "Key Vault",
+      "category": "Key Management",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vault:legacy-kv",
+      "detail": "3 key(s) have no expiry date set.",
+      "remediation": "Set an expiration date on all vault keys.",
+      "evidence": {
+        "config": {
+          "name": "legacy-kv",
+          "soft_delete": false,
+          "purge_protection": false,
+          "default_action": "Allow",
+          "private_endpoint": false,
+          "diagnostics": false,
+          "keys_without_expiry": 3
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-SQL-008",
+      "check_title": "SQL long-term backup retention disabled",
+      "cloud": "azure",
+      "service": "SQL",
+      "category": "Backup & Recovery",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "sql:legacysql",
+      "detail": "Long-term backup retention is not configured; recovery is limited to the automated window.",
+      "remediation": "Configure long-term retention policies for compliance archives.",
+      "evidence": {
+        "config": {
+          "name": "legacysql",
+          "public_network_access": true,
+          "auditing": false,
+          "tde": true,
+          "min_tls": "1.0",
+          "va_enabled": false,
+          "ad_admin": false,
+          "firewall_open": true,
+          "lt_retention": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AKS-006",
+      "check_title": "AKS Azure Policy add-on disabled",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "The Azure Policy add-on is disabled on the cluster; policy violations inside pods are not enforced.",
+      "remediation": "Enable the Azure Policy add-on on the cluster.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-LOG-002",
+      "check_title": "Log Analytics not encrypted with CMK",
+      "cloud": "azure",
+      "service": "Log Analytics",
+      "category": "Data Protection",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "log-analytics",
+      "detail": "Log Analytics workspaces are not encrypted with a CMK.",
+      "remediation": "Configure customer-managed keys on workspaces.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-LOG-003",
+      "check_title": "Log Analytics retention below 30 days",
+      "cloud": "azure",
+      "service": "Log Analytics",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "log-analytics",
+      "detail": "Workspace(s) legacy-workspace retain logs for less than 30 days.",
+      "remediation": "Raise workspace retention to >= 30 days (90+ for security).",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-RBAC-004",
+      "check_title": "Service principal with Owner/Contributor",
+      "cloud": "azure",
+      "service": "IAM/RBAC",
+      "category": "Identity & Access",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "sp:deploy-svc",
+      "detail": "Service principal holds 'Owner' at /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4eeee4; machine credentials with broad roles are high-risk.",
+      "remediation": "Grant service principals only scoped roles; use managed identity and break-glass roles.",
+      "evidence": {},
+      "cis": null
+    },
+    {
+      "check_id": "AZ-COS-004",
+      "check_title": "Cosmos DB backup not continuous",
+      "cloud": "azure",
+      "service": "Cosmos DB",
+      "category": "Backup & Recovery",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "cosmos:legacy-cosmos",
+      "detail": "Backup is not continuous; point-in-time restoration is unavailable.",
+      "remediation": "Enable continuous backup mode with PITR.",
+      "evidence": {
+        "config": {
+          "name": "legacy-cosmos",
+          "public_network_access": true,
+          "ip_rules": 0,
+          "local_auth": true,
+          "backup_continuous": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-RED-002",
+      "check_title": "Redis cache without private endpoint",
+      "cloud": "azure",
+      "service": "Redis Cache",
+      "category": "Network Security",
+      "severity": "LOW",
+      "status": "FAIL",
+      "resource": "redis:cache-legacy",
+      "detail": "Redis cache has no private endpoint; traffic traverses the public network.",
+      "remediation": "Connect caches via private endpoints.",
+      "evidence": {
+        "config": {
+          "name": "cache-legacy",
+          "non_ssl_enabled": true,
+          "private_endpoint": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APP-008",
+      "check_title": "App Service remote debugging enabled",
+      "cloud": "azure",
+      "service": "App Service",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "app:legacy-app",
+      "detail": "Remote debugging is enabled; anyone who can reach the app can attach a debugger.",
+      "remediation": "Disable remote debugging in production.",
+      "evidence": {
+        "config": {
+          "name": "legacy-app",
+          "https_only": false,
+          "min_tls": "1.0",
+          "client_cert": false,
+          "ftps_state": "AllAllowed",
+          "managed_identity": false,
+          "auth_enabled": false,
+          "http_logging": false,
+          "remote_debugging": true
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-VM-007",
+      "check_title": "VM without Azure Monitor agent",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "The Azure Monitor agent is not installed; guest OS telemetry is not collected.",
+      "remediation": "Install the Azure Monitor agent on all VMs.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-NSG-004",
+      "check_title": "NSG flow log retention below 90 days",
+      "cloud": "azure",
+      "service": "Network",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "nsg:nsg-dangling",
+      "detail": "Flow log retention is 14 days (< 90); forensic history expires too soon.",
+      "remediation": "Set flow log retention to >= 90 days.",
+      "evidence": {
+        "config": {
+          "name": "nsg-dangling",
+          "associated": false,
+          "flow_logs": true,
+          "flow_retention_days": 14,
+          "rules": [
+            {
+              "proto": "Tcp",
+              "ports": "80",
+              "source": "10.0.0.0/8",
+              "direction": "Inbound"
+            }
+          ]
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APIM-001",
+      "check_title": "API Management without managed identity",
+      "cloud": "azure",
+      "service": "API Management",
+      "category": "Identity & Access",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "apim:legacy-apim",
+      "detail": "API Management has no managed identity; it must hold secrets to reach backends.",
+      "remediation": "Enable a system-assigned managed identity on the service.",
+      "evidence": {
+        "config": {
+          "name": "legacy-apim",
+          "identity": false,
+          "sku": "Developer",
+          "vnet": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APIM-002",
+      "check_title": "API Management on Developer tier",
+      "cloud": "azure",
+      "service": "API Management",
+      "category": "Security Posture",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "apim:legacy-apim",
+      "detail": "API Management is on the Developer tier (no SLA, limited features, no VNet isolation).",
+      "remediation": "Upgrade to Standard/Premium for production APIs.",
+      "evidence": {
+        "config": {
+          "name": "legacy-apim",
+          "identity": false,
+          "sku": "Developer",
+          "vnet": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-APIM-003",
+      "check_title": "API Management not VNet-injected",
+      "cloud": "azure",
+      "service": "API Management",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "apim:legacy-apim",
+      "detail": "API Management is not injected into a VNet; the gateway is publicly reachable.",
+      "remediation": "Inject API Management into a VNet (external or internal mode).",
+      "evidence": {
+        "config": {
+          "name": "legacy-apim",
+          "identity": false,
+          "sku": "Developer",
+          "vnet": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AGW-001",
+      "check_title": "App Gateway without WAF",
+      "cloud": "azure",
+      "service": "Application Gateway",
+      "category": "Network Security",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "agw:gw-legacy",
+      "detail": "Application Gateway has no WAF policy; L7 attacks are not filtered.",
+      "remediation": "Attach a WAF policy (OWASP ruleset) to the gateway.",
+      "evidence": {
+        "config": {
+          "name": "gw-legacy",
+          "waf": false,
+          "ssl_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-AGW-002",
+      "check_title": "App Gateway without TLS policy",
+      "cloud": "azure",
+      "service": "Application Gateway",
+      "category": "Network Security",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "agw:gw-legacy",
+      "detail": "Application Gateway has no TLS policy; TLS settings are not hardened.",
+      "remediation": "Configure an explicit TLS policy on the gateway.",
+      "evidence": {
+        "config": {
+          "name": "gw-legacy",
+          "waf": false,
+          "ssl_policy": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-VM-005",
+      "check_title": "VM encryption at host disabled",
+      "cloud": "azure",
+      "service": "Compute",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "vm:vm-legacy",
+      "detail": "Encryption at host is disabled; temporary disks and cache are not encrypted.",
+      "remediation": "Enable encryption at host for sensitive workloads.",
+      "evidence": {
+        "config": {
+          "name": "vm-legacy",
+          "public_ip": true,
+          "nic_has_nsg": false,
+          "boot_diagnostics": false,
+          "os_disk_cmk": false,
+          "antimalware": false,
+          "monitor_agent": false,
+          "encryption_at_host": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-MON-002",
+      "check_title": "No activity log alert rules",
+      "cloud": "azure",
+      "service": "Monitoring",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "monitoring",
+      "detail": "No activity log alert rules; admin operations (role changes, security settings) generate no alerts.",
+      "remediation": "Create activity log alerts for critical control-plane events.",
+      "evidence": {},
+      "cis": "CIS Azure 5.2.1"
+    },
+    {
+      "check_id": "AZ-AKS-007",
+      "check_title": "AKS cluster autoscaler disabled",
+      "cloud": "azure",
+      "service": "AKS",
+      "category": "Kubernetes",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "aks:legacy-aks",
+      "detail": "Cluster autoscaler is not configured; node pools cannot scale with demand.",
+      "remediation": "Enable the cluster autoscaler on node pools.",
+      "evidence": {
+        "config": {
+          "name": "legacy-aks",
+          "rbac_enabled": false,
+          "private_cluster": false,
+          "network_policy": null,
+          "azure_ad_auth": false,
+          "pod_identity": false,
+          "azure_policy_addon": false,
+          "autoscaler": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-STR-006",
+      "check_title": "Storage blob soft delete disabled",
+      "cloud": "azure",
+      "service": "Storage",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "storage:legacystore",
+      "detail": "Blob soft delete is disabled; deleted blobs are permanently destroyed.",
+      "remediation": "Enable blob soft delete with a retention policy.",
+      "evidence": {
+        "config": {
+          "name": "legacystore",
+          "allow_blob_public_access": true,
+          "min_tls": "TLS1_0",
+          "https_only": false,
+          "default_action": "Allow",
+          "cmk": false,
+          "encryption_type": "MicrosoftManaged",
+          "blob_soft_delete": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-FD-001",
+      "check_title": "Front Door profile without WAF policy",
+      "cloud": "azure",
+      "service": "Front Door",
+      "category": "Security Posture",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "frontdoor:fd-legacy",
+      "detail": "Front Door profile has no WAF policy attached to its endpoints; edge traffic is unfiltered.",
+      "remediation": "Attach a WAF policy (managed rule sets) to each Front Door endpoint/frontend host.",
+      "evidence": {
+        "config": {
+          "name": "fd-legacy",
+          "waf": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-FD-002",
+      "check_title": "Front Door logging disabled",
+      "cloud": "azure",
+      "service": "Front Door",
+      "category": "Logging & Monitoring",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "frontdoor:fd-legacy",
+      "detail": "Front Door diagnostics/logging is disabled; access and WAF logs are not retained.",
+      "remediation": "Enable diagnostic settings for Front Door access and WAF logs to a Log Analytics workspace.",
+      "evidence": {
+        "config": {
+          "name": "fd-legacy",
+          "waf": false,
+          "logging": false
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-FN-001",
+      "check_title": "Function app allows anonymous HTTP triggers",
+      "cloud": "azure",
+      "service": "Functions",
+      "category": "Security Posture",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "resource": "functionapp:fn-legacy",
+      "detail": "Function app exposes HTTP triggers with anonymous (unauthenticated) authorization.",
+      "remediation": "Require function/app-level auth (Function key, Entra ID or App Service auth) instead of anonymous.",
+      "evidence": {
+        "config": {
+          "name": "fn-legacy",
+          "https_only": false,
+          "auth_level": "anonymous"
+        }
+      },
+      "cis": null
+    },
+    {
+      "check_id": "AZ-FN-002",
+      "check_title": "Function app not HTTPS-only",
+      "cloud": "azure",
+      "service": "Functions",
+      "category": "Data Protection",
+      "severity": "MEDIUM",
+      "status": "FAIL",
+      "resource": "functionapp:fn-legacy",
+      "detail": "Function app accepts plaintext HTTP traffic.",
+      "remediation": "Set HTTPS Only (https_only) and a minimum TLS version on the function app.",
+      "evidence": {
+        "config": {
+          "name": "fn-legacy",
+          "https_only": false,
+          "auth_level": "anonymous"
+        }
+      },
+      "cis": null
+    }
+  ]
+}

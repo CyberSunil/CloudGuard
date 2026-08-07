@@ -1,0 +1,21 @@
+cloud,check_id,check_title,service,category,severity,status,resource
+aws,AWS-IAM-001,Root account has active access keys,IAM,Identity & Access,CRITICAL,FAIL,root-account
+aws,AWS-IAM-002,Root account does not have MFA enabled,IAM,Identity & Access,CRITICAL,FAIL,root-account
+aws,AWS-S3-001,S3 bucket publicly accessible,S3,Storage & Data Protection,CRITICAL,FAIL,s3://legacy-public
+aws,AWS-S3-002,S3 bucket default encryption disabled,S3,Storage & Data Protection,HIGH,FAIL,s3://backups
+aws,AWS-IAM-004,Console users without MFA,IAM,Identity & Access,HIGH,FAIL,user:bob
+aws,AWS-EC2-001,Security group exposes management ports to the internet,EC2/Network,Network Security,CRITICAL,FAIL,sg:sg-web
+aws,AWS-CT-001,CloudTrail disabled or misconfigured,CloudTrail,Logging & Monitoring,CRITICAL,FAIL,cloudtrail
+azure,AZ-STR-002,Storage account minimum TLS below 1.2,Storage,Network Security,HIGH,FAIL,storage:legacystore
+azure,AZ-KV-001,Key Vault soft delete disabled,Key Vault,Key Management,HIGH,FAIL,vault:prod-kv
+azure,AZ-NSG-001,NSG exposes management ports to any source,Network,Network Security,CRITICAL,FAIL,nsg:nsg-web
+azure,AZ-SQL-002,SQL server auditing disabled,SQL,Logging & Monitoring,HIGH,FAIL,sql:legacysql
+azure,AZ-MON-001,Activity log not exported,Monitoring,Logging & Monitoring,HIGH,FAIL,subscription-activity-log
+gcp,GCP-IAM-002,Primitive role assigned to a human user,IAM,Identity & Access,CRITICAL,FAIL,user:admin@example.com
+gcp,GCP-ST-001,Bucket publicly readable,Cloud Storage,Storage & Data Protection,CRITICAL,FAIL,gs://demo-legacy-public
+gcp,GCP-LOG-001,Admin activity audit logging disabled,Cloud Logging,Logging & Monitoring,HIGH,FAIL,project-audit-config
+gcp,GCP-GKE-003,GKE uses legacy ABAC / no release channel,GKE,Kubernetes,CRITICAL,FAIL,gke:legacy-cluster
+gcp,GCP-CMP-002,Shielded VM disabled,Compute,Compute,MEDIUM,FAIL,instance:legacy-vm
+oci,OCI-IAM-003,IAM policy grants broad manage all-resources,IAM,Identity & Access,CRITICAL,FAIL,policy:Network-Admins-Policy
+oci,OCI-OS-001,Bucket publicly readable,Object Storage,Storage & Data Protection,CRITICAL,FAIL,oci://demo-legacy-share
+oci,OCI-CG-001,Cloud Guard not enabled,Cloud Guard,Security Posture,HIGH,FAIL,cloud-guard

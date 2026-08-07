@@ -1,0 +1,151 @@
+# CloudGuard - scheduled & on-demand cloud configuration scans
+#
+# Nightly scan (02:00 UTC) + manual runs via the "Run workflow" button.
+# Each provider gets its own job so a failure in one never blocks the others.
+#
+# Required repository secrets (GitHub -> Settings -> Secrets and variables):
+#   AWS_ROLE_ARN                     IAM role with ReadOnlyAccess (OIDC federation)
+#   AWS_REGION                       e.g. us-east-1
+#   AZURE_CLIENT_ID                  service principal app id (workload identity)
+#   AZURE_TENANT_ID                  tenant id
+#   AZURE_SUBSCRIPTION_ID            subscription to scan
+#   GCP_WORKLOAD_IDENTITY_PROVIDER   e.g. projects/123/locations/global/workloadIdentityPools/pool/providers/provider
+#   GCP_SERVICE_ACCOUNT              SA email with the CloudGuard viewer roles
+#   GCP_PROJECT_ID                   project to scan
+#   OCI_CONFIG                       contents of ~/.oci/config (key_file replaced below)
+#   OCI_API_KEY                      PEM private key for the OCI user
+#
+# Optional:
+#   BASELINE_CSV                     committed baseline CSV path (e.g. comparison_template.csv)
+#                                    to enable the Comparison section + drift signal.
+
+name: CloudGuard scan
+
+on:
+  schedule:
+    - cron: '0 2 * * *'        # nightly 02:00 UTC
+  workflow_dispatch:           # manual trigger: "Run workflow"
+    inputs:
+      cloud:
+        description: 'Provider to scan (aws, azure, gcp, oci, or all)'
+        required: true
+        default: 'all'
+      baseline:
+        description: 'Baseline CSV path in repo (optional, e.g. comparison_template.csv)'
+        required: false
+        default: ''
+  push:
+    branches: [main]
+    paths:
+      - 'cloudsec/**'
+      - 'run.py'
+      - '.github/workflows/cloudguard-scan.yml'
+
+permissions:
+  id-token: write   # for OIDC federation
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cloud: [aws, azure, gcp, oci]
+    # Scheduled/push runs scan every provider; manual runs scan the chosen one (or all).
+    if: |
+      (github.event_name != 'workflow_dispatch') ||
+      (github.event.inputs.cloud == 'all' || github.event.inputs.cloud == matrix.cloud)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ---- Provider authentication (OIDC / workload identity, no long-lived keys) ----
+      - name: Configure AWS credentials
+        if: matrix.cloud == 'aws'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+
+      - name: Authenticate to Azure
+        if: matrix.cloud == 'azure'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Authenticate to Google Cloud
+        if: matrix.cloud == 'gcp'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Prepare OCI config
+        if: matrix.cloud == 'oci'
+        run: |
+          mkdir -p ~/.oci
+          printf '%s\n' "${{ secrets.OCI_CONFIG }}" | sed "s|KEY_FILE_PLACEHOLDER|/home/runner/.oci/oci_api_key.pem|" > ~/.oci/config
+          printf '%s\n' "${{ secrets.OCI_API_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
+
+      # ---- Scan -----------------------------------------------------------------------
+      # run.py appends its own scan_<ts> subdir under --output (cli._out_dir), so
+      # the artifact below captures the whole provider folder.
+      - name: Run CloudGuard scan
+        run: |
+          set -euo pipefail
+          CLOUD=${{ matrix.cloud }}
+          OUT="reports/scan-$CLOUD"
+          ARGS=(--cloud "$CLOUD" --output "$OUT")
+          # Manual runs: use the typed baseline path; scheduled runs: fall back
+          # to the BASELINE_CSV secret if one is configured. The path must be
+          # committed in the repo, else comparison is silently skipped.
+          BASELINE="${{ github.event.inputs.baseline }}"
+          if [ -z "${BASELINE:-}" ]; then BASELINE="${{ secrets.BASELINE_CSV }}"; fi
+          if [ -n "${BASELINE:-}" ]; then ARGS+=(--baseline "$BASELINE"); fi
+
+          case "$CLOUD" in
+            aws)   ;;
+            azure) ARGS+=(--subscription-id "${{ secrets.AZURE_SUBSCRIPTION_ID }}") ;;
+            gcp)   ARGS+=(--project-id "${{ secrets.GCP_PROJECT_ID }}") ;;
+            oci)   ARGS+=(--oci-config ~/.oci/config --oci-profile DEFAULT) ;;
+          esac
+
+          python3 run.py scan "${ARGS[@]}"
+
+      - name: Upload dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudguard-${{ matrix.cloud }}
+          path: reports/scan-${{ matrix.cloud }}/
+          retention-days: 30
+          if-no-files-found: error
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: scan
+    if: always()
+    steps:
+      - name: Summarize scan status
+        run: |
+          echo "## CloudGuard scan run" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Provider | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| aws | ${{ needs.scan.result == 'success' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| azure | ${{ needs.scan.result == 'success' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| gcp | ${{ needs.scan.result == 'success' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| oci | ${{ needs.scan.result == 'success' && '✅' || '❌' }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Open the **Artifacts** tab, download the per-provider zip and open \`dashboard.html\`." >> "$GITHUB_STEP_SUMMARY"
