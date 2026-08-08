@@ -53,9 +53,7 @@ jobs:
       matrix:
         cloud: [aws, azure, gcp, oci]
     # Scheduled/push runs scan every provider; manual runs scan the chosen one (or all).
-    if: |
-      (github.event_name != 'workflow_dispatch') ||
-      (github.event.inputs.cloud == 'all' || github.event.inputs.cloud == matrix.cloud)
+   if: github.event_name != 'workflow_dispatch' || github.event.inputs.cloud == 'all' || github.event.inputs.cloud == matrix.cloud
     steps:
       - name: Checkout
         uses: actions/checkout@v4
