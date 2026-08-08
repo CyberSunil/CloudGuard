@@ -21,7 +21,7 @@
 ![Frameworks](https://img.shields.io/badge/Frameworks-CIS%20%7C%20SOC2%20%7C%20PCI%20%7C%20NIST%20%7C%20HIPAA-6f42c1)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-**Run a read-only review → see what's wrong, *where*, and *how to fix it* → prove remediation.**
+> **Run a read-only review → See what's wrong, where, and how to fix it → Prove remediation.**
 
 </div>
 
