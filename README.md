@@ -171,11 +171,11 @@ python3 run.py checks --cloud azure --frameworks soc2 --json
 
 | Cloud | Packages | Install |
 |---|---|---|
-| **AWS** | `boto3>=1.34.0` | `pip install ".[aws]"` |
-| **Azure** | `azure-identity`, `azure-mgmt-resource/storage/network/keyvault/sql/compute/monitor/containerregistry/web/cosmosdb` | `pip install ".[azure]"` |
-| **GCP** | `google-cloud-storage/resource-manager/compute/sql/kms/logging/container` | `pip install ".[gcp]"` |
-| **OCI** | `oci>=2.126.0` | `pip install ".[oci]"` |
-| **All** | Everything above | `pip install ".[all]"` or `pip install -r requirements.txt` |
+| **AWS** | `boto3>=1.34.0` | `pip install .[aws]` |
+| **Azure** | `azure-identity` + 10 `azure-mgmt-*` packages ([full list](requirements.txt)) | `pip install .[azure]` |
+| **GCP** | `google-cloud-storage`, `-resource-manager`, `-compute`, `-sql`, `-kms`, `-logging`, `-container` | `pip install .[gcp]` |
+| **OCI** | `oci>=2.126.0` | `pip install .[oci]` |
+| **All** | Everything above | `pip install .[all]` or `pip install -r requirements.txt` |
 
 **Install options**
 - 🐍 **pip** — `pip install .[all]` (installs the `cloudguard` command; `pip install .` alone is stdlib-only and demo works)
