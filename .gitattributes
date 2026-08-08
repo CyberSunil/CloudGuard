@@ -1,0 +1,2 @@
+sample_reports/** linguist-generated=true
+cloudsec/output/templates/*.html linguist-generated=true
