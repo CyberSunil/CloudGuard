@@ -38,7 +38,7 @@ CloudGuard is built around a different use case: the ongoing **review workflow**
 
 ## 📸 Screenshots
 
-| Findings Dashboard | CIS Benchmark View | Drift Detection |
+| Findings Dashboard | CIS Benchmark View | Summary view |
 |:---:|:---:|:---:|
 | ![Findings dashboard](docs/screenshots/dashboard.png) | ![CIS Benchmark view](docs/screenshots/CIS_Benchmark.png) | ![Summary view](docs/screenshots/summary.png) |
 
@@ -91,7 +91,6 @@ CloudGuard is built around a different use case: the ongoing **review workflow**
 - [🧭 Mapping Your Own Findings to Check IDs](#️-mapping-your-own-findings-to-check-ids)
 - [🧩 Extending the Catalog](#-extending-the-catalog)
 - [📏 Catalog Size vs ScoutSuite / Prowler](#-catalog-size-vs-scoutsuite--prowler)
-- [📦 Packaging & Distribution (apt / dpkg / pip)](#-packaging--distribution-apt--dpkg--pip)
 - [📍 Roadmap](#️-roadmap)
 
 ---
@@ -180,7 +179,6 @@ python3 run.py checks --cloud azure --frameworks soc2 --json
 
 **Install options**
 - 🐍 **pip** — `pip install .[all]` (installs the `cloudguard` command; `pip install .` alone is stdlib-only and demo works)
-- 🐧 **apt / dpkg** — a self-contained `.deb` bundles its own Python venv with all SDKs (see [Packaging](#-packaging--distribution-apt--dpkg--pip))
 - 🐳 **CI** — runs headless; a GitHub Actions workflow ships in `.github/workflows/`
 
 **Runtime notes**
@@ -345,44 +343,6 @@ Each cloud's checks live in `cloudsec/checks/<cloud>.py` as pure functions over 
 ## 📏 Catalog Size vs ScoutSuite / Prowler
 
 This tool ships **321 distinct, hand-written checks** (AWS 120 · Azure 90 · GCP 68 · OCI 43) — including unique coverage like AWS SageMaker ML security, Azure Front Door & Functions, GCP Vertex AI & Pub/Sub CMEK, and OCI API Gateway, which ScoutSuite does not cover at all. ScoutSuite's marketing "1000+" counts *rule firings* (each rule fired per resource × region); its distinct rule count is in the low hundreds. This is the largest per-cloud CIS-focused set where every check is backed by real read-only collection code and demo data.
-
----
-
-## 📦 Packaging & Distribution (apt / dpkg / pip)
-
-CloudGuard ships as a self-contained `.deb` that bundles its own Python virtualenv (all cloud SDKs included) — installs on any Debian/Ubuntu system and works offline with no pip installs.
-
-### Option A — build a `.deb` directly (no Debian tooling needed)
-
-```bash
-sudo apt install dpkg-dev python3-venv
-./packaging/build_deb.sh                  # bundle ALL cloud SDKs (needs network)
-./packaging/build_deb.sh --clouds aws     # AWS SDK only (smaller .deb)
-./packaging/build_deb.sh --demo           # stdlib only, no network (fast check)
-sudo apt install ./dist/cloudguard_1.0.0_amd64.deb
-cloudguard --help && cloudguard demo --cloud aws
-```
-
-### Option B — proper Debian source package (for maintainers)
-
-```bash
-sudo apt install dh-virtualenv debhelper dpkg-dev
-git tag -a v1.0.0 -m "CloudGuard 1.0.0"
-dpkg-buildpackage -us -uc          # builds cloudguard_1.0.0_amd64.deb
-```
-
-### Option C — host your own APT repository
-
-Publish the `.deb`s (e.g. `reprepro`/`aptly`), sign with GPG, then users run:
-
-```
-deb [signed-by=/usr/share/keyrings/cloudguard.gpg] https://apt.example.com/cloudguard stable main
-apt update && apt install cloudguard
-```
-
-### Also via pip
-
-`pip install .[all]` installs the `cloudguard` command (SDKs as optional extras `.[aws]` `.[azure]` `.[gcp]` `.[oci]` `.[all]`; `pip install .` alone is stdlib-only — demo works).
 
 ---
 
