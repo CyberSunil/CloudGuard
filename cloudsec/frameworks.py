@@ -282,7 +282,11 @@ def frameworks_for(check) -> Dict[str, str]:
     explicit = EXPLICIT_MAP.get(cid)
     if explicit:
         return dict(explicit)
-    if hasattr(check, "title"):
+    # NB: don't use hasattr(check, "title") to detect "is this a Check
+    # object" - str also has a .title() method (str.title()), so a plain
+    # check_id string would be misdetected as a Check and crash on
+    # check.service/check.category below.
+    if not isinstance(check, str):
         hay = " ".join([check.title or "", check.service or "", check.category or ""]).lower()
     else:
         hay = str(check).lower()
@@ -305,7 +309,7 @@ def lead_frameworks(check) -> Set[str]:
     lead is what makes ``--frameworks`` filtering meaningful: a network
     exposure check leads in PCI DSS / NIST, an MFA check in SOC 2 / HIPAA.
     """
-    if hasattr(check, "title"):
+    if not isinstance(check, str):  # see note in frameworks_for() above
         hay = " ".join([check.title or "", check.service or "", check.category or ""]).lower()
     else:
         hay = str(check).lower()
