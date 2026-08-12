@@ -13,6 +13,8 @@ from .compare import (compare_scan_to_baseline, compare_scans, load_scan_result,
                       parse_baseline_csv, summarize_comparison, write_golden_baseline)
 from .demo import get_demo_snapshots
 from .frameworks import framework_check_ids
+from .importers.prowler import build_scan_result as build_prowler_scan_result
+from .importers.prowler import load_prowler_csv, top_failing_checks
 from .models import Finding, ScanResult
 from .output.csv_io import (parse_cases_csv, write_comparison_csv,
                             write_findings_csv, write_json, write_review_csv)
@@ -273,6 +275,41 @@ def _finalize(results: Dict[str, ScanResult], out: str,
     html = build_dashboard_html(results, comparison_rows, comparison_summary,
                                 title=title, review=review)
     write_dashboard(os.path.join(out, "dashboard.html"), html)
+
+
+def cmd_import_prowler(a: argparse.Namespace) -> int:
+    """Import a Prowler CSV export and render it through CloudGuard's own
+    findings CSV / JSON result / dashboard writers - no live cloud
+    credentials required, since Prowler already did the collecting."""
+    if not a.csv or not os.path.exists(a.csv):
+        print("ERROR: --csv <prowler_export.csv> required.")
+        return 2
+    rows = load_prowler_csv(a.csv, include_muted=a.include_muted)
+    if not rows:
+        print("ERROR: no rows parsed - check the file and delimiter (Prowler uses ';').")
+        return 2
+
+    result = build_prowler_scan_result(rows, cloud=a.cloud)
+    print(SEP)
+    print(f"  Prowler import ({os.path.basename(a.csv)}) -> {len(rows)} row(s), "
+          f"{len(result.findings)} kept")
+    _print_result(result)
+    print(SEP)
+    print("  Top failing checks (CRITICAL/HIGH always shown in full; "
+          "MEDIUM/LOW filled in by resource count):")
+    for cid, title, sev, n in top_failing_checks(result):
+        print(f"    [{sev:<8}] {cid:<40} {n:>3} resource(s) - {title}")
+
+    out = _out_dir(a.output)
+    write_findings_csv(os.path.join(out, f"findings_{a.cloud}.csv"), result)
+    write_json(os.path.join(out, f"result_{a.cloud}.json"), result.to_dict())
+    if not a.no_html:
+        html = build_dashboard_html({a.cloud: result},
+                                    title="Cloud Configuration Review - Prowler Import")
+        write_dashboard(os.path.join(out, "dashboard.html"), html)
+    print(SEP)
+    print(f"  Output written to: {out}")
+    return 0
 
 
 def cmd_save_baseline(a: argparse.Namespace) -> int:
@@ -709,6 +746,19 @@ def build_parser() -> argparse.ArgumentParser:
     c.add_argument("--scan", required=True, help="scan JSON file or result directory")
     c.add_argument("--output", default=None)
     c.set_defaults(func=cmd_compare)
+
+    ip = sub.add_parser(
+        "import-prowler",
+        help="Import a Prowler CSV export and render it via CloudGuard's dashboard/CSV/JSON")
+    ip.add_argument("--csv", required=True, help="Path to the Prowler CSV export ("
+                    "native Prowler export format, ';'-delimited)")
+    ip.add_argument("--cloud", choices=list(CLOUDS), default="azure",
+                    help="Cloud label to tag the imported findings with (default: azure)")
+    ip.add_argument("--output", default="reports")
+    ip.add_argument("--include-muted", action="store_true",
+                    help="Include rows Prowler marked MUTED (excluded by default)")
+    ip.add_argument("--no-html", action="store_true")
+    ip.set_defaults(func=cmd_import_prowler)
 
     sb = sub.add_parser("save-baseline", help="Freeze a trusted scan as a golden baseline CSV")
     sb.add_argument("--scan", required=True, help="scan JSON file or result directory")
